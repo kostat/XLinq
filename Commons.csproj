@@ -1,0 +1,14 @@
+<Project>
+
+    <PropertyGroup>
+        <VersionPrefix>1.0.0</VersionPrefix>
+	<VersionSuffix>beta1</VersionSuffix>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <Company>Streamx LLC</Company>
+        <Authors>Konstantin Triger</Authors>
+        <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+        <Copyright>© 2020-Now Streamx LLC</Copyright>
+        <SourceRevisionId>date$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mmZ"))</SourceRevisionId>
+    </PropertyGroup>
+
+</Project>

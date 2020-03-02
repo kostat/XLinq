@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Streamx.Linq.ExTree</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="../Commons.csproj" />
+
+  <PropertyGroup>
+    <PackageId>Streamx.Linq.ExTree</PackageId>
+    <Description>Converts MSIL to AST</Description>
+  </PropertyGroup>
+
+</Project>
