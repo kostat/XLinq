@@ -93,14 +93,14 @@ namespace Streamx.Linq.SQL {
         [Function]
         [Operator(OmitParentheses = true)]
         public static bool IN<T>(T expressionToMatch,
-            ICollection<T> collection) where T : IComparable {
+            IEnumerable<T> collection) where T : IComparable {
             throw new NotSupportedException();
         }
 
         [Function]
         [Operator(OmitParentheses = true)]
         public static bool IN<T>(T? expressionToMatch,
-            ICollection<T> collection) where T : struct, IComparable {
+            IEnumerable<T> collection) where T : struct, IComparable {
             throw new NotSupportedException();
         }
 

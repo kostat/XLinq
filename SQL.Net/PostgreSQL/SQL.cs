@@ -523,9 +523,4 @@ namespace Streamx.Linq.SQL.PostgreSQL {
         [Function(OmitParentheses = true)]
         IUpdateSet DO_UPDATE();
     }
-
-    public interface IUpdateSet {
-        [Function(OmitParentheses = true)]
-        IClause SET(Action sql);
-    }
 }

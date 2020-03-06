@@ -127,6 +127,13 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
+        [Function(OmitParentheses = true,
+            ParameterContext = ParameterContext.FromWithoutAlias,
+            ParameterContextCapabilities = new[] {nameof(Capability.ALIAS_UPDATE)})]
+        public static IUpdateSet UPDATE<T>(T tableReference) {
+            throw new NotSupportedException();
+        }
+
         [Function(OmitParentheses = true, RequiresAlias = true)]
         public static T VALUES<T>(params T[] rows) where T : struct, ITuple {
             throw new NotSupportedException();
@@ -192,8 +199,8 @@ namespace Streamx.Linq.SQL {
 
 
             config.RegisterMethodSubstitution((ICollection<int> c, int item) => c.Contains(item), (ICollection<int> c, int i) => Operators.IN(i, c));
-            // config.RegisterMethodSubstitution((IEnumerable<int> c, int item) => c.Contains(item), (IEnumerable<int> c, int i) => Operators.IN(i, c));
-            config.RegisterMethodSubstitution((ICollection<int> c) => c.Any(), (ICollection<int> c) => Operators.EXISTS(c));
+            config.RegisterMethodSubstitution((IEnumerable<int> c, int item) => c.Contains(item), (IEnumerable<int> c, int i) => Operators.IN(i, c));
+            config.RegisterMethodSubstitution((IEnumerable<int> c) => c.Any(), (IEnumerable<int> c) => Operators.EXISTS(c));
 
             config.RegisterMethodSubstitution((Object s1, Object s2) => String.Concat(s1, s2),
                 (Object s1, Object s2) => ScalarFunctions.CONCAT((String) s1, (String) s2));
@@ -216,6 +223,9 @@ namespace Streamx.Linq.SQL {
             config.RegisterMethodSubstitution((string s1) => s1.Trim(), (string s1) => ScalarFunctions.TRIM(s1));
             config.RegisterMethodSubstitution((string s1) => s1.TrimEnd(), (string s1) => ScalarFunctions.RTRIM(s1));
             config.RegisterMethodSubstitution((string s1) => s1.TrimStart(), (string s1) => ScalarFunctions.LTRIM(s1));
+            config.RegisterMethodSubstitution((string s1, string s2) => s1.Contains(s2), (string s1, string s2) => Operators.LIKE(s1, '%' + s2 + '%'));
+            config.RegisterMethodSubstitution((string s1, string s2) => s1.StartsWith(s2), (string s1, string s2) => Operators.LIKE(s1, s2 + '%'));
+            config.RegisterMethodSubstitution((string s1, string s2) => s1.EndsWith(s2), (string s1, string s2) => Operators.LIKE(s1, '%' + s2));
 
         }
     }

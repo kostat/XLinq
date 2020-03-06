@@ -286,7 +286,6 @@ namespace Streamx.Linq.SQL {
          */
         [Function(ArgumentsDelimiter = " AS")]
         internal static T CAST<T, TType, TExpression>(TExpression expression, TType dataType)
-            where T : IComparable<T>
             where TType : DataType<T>
             where TExpression : IComparable<TExpression> {
             throw new NotSupportedException();
@@ -294,7 +293,6 @@ namespace Streamx.Linq.SQL {
         
         [Function(ArgumentsDelimiter = " AS")]
         internal static T CAST<T, TType, TExpression>(TExpression? expression, TType dataType)
-            where T : IComparable<T>
             where TType : DataType<T>
             where TExpression : struct, IComparable<TExpression> {
             throw new NotSupportedException();

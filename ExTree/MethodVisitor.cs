@@ -322,7 +322,7 @@ namespace Streamx.Linq.ExTree {
                 case ILOpCode.Pop:
                     e = _exprStack.Pop();
 
-                    Predicate<Expression> isInteresting = x => x != null && !(x is ConstantExpression || x is ParameterExpression);
+                    Predicate<Expression> isInteresting = x => x != null && !(x is ConstantExpression || x is ParameterExpression || x is MemberExpression);
 
                     if (isInteresting(e)) {
                         for (var i = 0; i < _exprStack.Count; i++) {

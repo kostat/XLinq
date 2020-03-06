@@ -2,9 +2,7 @@ using System;
 using Streamx.Linq.SQL.Grammar;
 
 namespace Streamx.Linq.SQL {
- 
-    public abstract class DataType<T> 
-        where T : IComparable<T> {
+    public abstract class DataType<T> {
         [Function("", OmitArgumentsDelimiter = true, OmitParentheses = true)]
         public T Of(String constant) {
             throw new NotSupportedException();
@@ -46,7 +44,7 @@ namespace Streamx.Linq.SQL {
         public T Cast<TExpression>(TExpression expression)
             where TExpression : IComparable<TExpression> =>
             ScalarFunctions.CAST<T, DataType<T>, TExpression>(expression, this);
-        
+
         public T Cast<TExpression>(TExpression? expression)
             where TExpression : struct, IComparable<TExpression> =>
             ScalarFunctions.CAST<T, DataType<T>, TExpression>(expression, this);
@@ -72,7 +70,7 @@ namespace Streamx.Linq.SQL {
             String typeName = ToString() + '(' + precision + ',' + scale + ')';
             return Create(typeName);
         }
-        
+
         /**
      * Create a derived type. Uses {@link MessageFormat#format(Object)} for formatting. {@code this} is passed as an
      * argument.
@@ -85,12 +83,12 @@ namespace Streamx.Linq.SQL {
      * 
      */
         [Local]
-        public DataType<TX> Derive<TX>(String format) where TX : IComparable<TX> {
+        public DataType<TX> Derive<TX>(String format) {
             String typeName = String.Format(format, this);
             return DataType<TX>.Create(typeName);
         }
 
-        private class NamedDataType<TX> : DataType<TX> where TX : IComparable<TX> {
+        private class NamedDataType<TX> : DataType<TX> {
             private readonly string name;
 
             public NamedDataType(string name) {

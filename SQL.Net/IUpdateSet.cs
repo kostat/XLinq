@@ -1,7 +1,7 @@
 using System;
 using Streamx.Linq.SQL.Grammar;
 
-namespace Streamx.Linq.SQL.TransactSQL {
+namespace Streamx.Linq.SQL {
     public interface IUpdateSet {
         [Function(OmitParentheses = true)]
         IClause SET(Action action);

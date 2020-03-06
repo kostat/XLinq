@@ -115,6 +115,15 @@ namespace Streamx.Linq.SQL {
             where TTuple : struct, ITuple {
             throw new NotSupportedException();
         }
+        
+        /**
+     * Block terminator in SQL
+     */
+        [BlockTerminator]
+        [Function(";", OmitParentheses = true)]
+        public static void Semicolon() {
+            throw new NotSupportedException();
+        }
 
         /*[CommonTableExpression(CommonTableExpressionType.Decorator)]
         [Function("", OmitParentheses = true, ParameterContext = ParameterContext.FromWithoutAlias, ParameterContextCapabilities = new[] {
