@@ -16,9 +16,10 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 return Expression.Constant(result, node.Type);
             }
 
-            if (ExLINQ.GetSubstitition(node.Method, out var subst))
-                // ReSharper disable once AssignNullToNotNullAttribute
-                return Visit(new Replacer(node.Object, node.Arguments, subst.Parameters).Visit(subst.Expression));
+            if (ExLINQ.GetSubstitition(node.Method, out var subst)) {
+                var replaced = new Replacer(node.Object != null ? Visit(node.Object) : null, Visit(node.Arguments), subst.Parameters).Visit(subst.Expression);
+                return Replacer.Convert(Visit(replaced), node.Type);
+            }
 
             if (node.Method.IsStatic) {
                 if (IsNotation(node.Method))
@@ -75,7 +76,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 return Convert(index == 0 ? Instance : Arguments[--index], node.Type);
             }
 
-            private static Expression Convert(Expression expression, Type type) =>
+            public static Expression Convert(Expression expression, Type type) =>
                 type.IsAssignableFrom(expression.Type) ? expression : Expression.Convert(Expression.Convert(expression, typeof(object)), type);
         }
     }
