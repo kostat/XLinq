@@ -76,7 +76,7 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
-        [Function]
+        /*[Function]
         [Operator]
         public static bool IN<T>(T expressionToMatch,
             params T[] valuesOrCollectionOrSubQuery) where T : IComparable {
@@ -88,7 +88,7 @@ namespace Streamx.Linq.SQL {
         public static bool IN<T>(T? expressionToMatch,
             params T[] valuesOrCollectionOrSubQuery) where T : struct, IComparable {
             throw new NotSupportedException();
-        }
+        }*/
 
         [Function]
         [Operator(OmitParentheses = true)]

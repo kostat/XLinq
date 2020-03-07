@@ -232,7 +232,7 @@ namespace Streamx.Linq.SQL {
 
     public interface IOffset {
         [Function(OmitParentheses = true)]
-        IFetchNext ROWS { get; }
+        IFetchNext ROWS();
     }
 
     public interface IFetchNext {
