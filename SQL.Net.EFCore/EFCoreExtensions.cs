@@ -39,6 +39,7 @@ namespace Streamx.Linq.SQL.EFCore {
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => -s1, (int s1) => -s1);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => !s1, (bool s1) => !s1);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => ~s1, (int s1) => ~s1);
+            ExLINQ.Configuration.RegisterMethodSubstitution((int s1) => (Point)s1, (int s1) => s1);
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local
@@ -50,6 +51,7 @@ namespace Streamx.Linq.SQL.EFCore {
             public static Point operator -(Point a) => throw new NotImplementedException();
             public static Point operator !(Point a) => throw new NotImplementedException();
             public static Point operator ~(Point a) => throw new NotImplementedException();
+            public static implicit operator Point(int a) => throw new NotImplementedException();
 
             public static Point operator +(Point a, Point b) => throw new NotImplementedException();
             public static Point operator -(Point a, Point b) => throw new NotImplementedException();
