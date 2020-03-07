@@ -615,8 +615,14 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static void RegisterVendorCapabilities(this IConfiguration config) {
             config.Capabilities = new HashSet<Capability>(new[] {Capability.TABLE_AS_ALIAS});
 
-
             config.RegisterMethodSubstitution((String s) => s.Length, (String s) => SQL.LEN(s));
+            config.RegisterMethodSubstitution((DateTime dt) => dt.Month, (DateTime dt) => SQL.MONTH(dt));
+            config.RegisterMethodSubstitution((DateTime dt) => dt.Year, (DateTime dt) => SQL.YEAR(dt));
+            config.RegisterMethodSubstitution((DateTime dt) => dt.Day, (DateTime dt) => SQL.DAY(dt));
+
+            config.RegisterMethodSubstitution((DateTimeOffset dt) => dt.Month, (DateTimeOffset dt) => SQL.MONTH(dt));
+            config.RegisterMethodSubstitution((DateTimeOffset dt) => dt.Year, (DateTimeOffset dt) => SQL.YEAR(dt));
+            config.RegisterMethodSubstitution((DateTimeOffset dt) => dt.Day, (DateTimeOffset dt) => SQL.DAY(dt));
             config.RegisterGenericCapabilities();
         }
     }
