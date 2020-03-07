@@ -91,13 +91,21 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 }
                 
                 var prop = FindProperty(target, methodBase, (e, mi) => e.FindProperty(mi));
-                if (prop == null && !target.IsDefined(typeof(TupleAttribute)))
+                if (prop == null && !IsEntity(target) && !target.IsDefined(typeof(TupleAttribute)))
                     throw TranslationError.UNMAPPED_FIELD.getError(methodBase);
                 var columnName = prop == null ? RemoveSpecialPrefix(methodBase.Name) : prop.GetColumnName();
                 return new IdentifierPath.Resolved(columnName.AsSequence(), methodBase.DeclaringType, methodBase.Name, null);
             }
 
             return new IdentifierPath.Resolved(methodBase.Name.AsSequence(), methodBase.DeclaringType, methodBase.Name, null);
+        }
+
+        private bool IsEntity(Type target) {
+            if (model.FindEntityType(target) != null)
+                return true;
+
+            target = target.BaseType;
+            return target != null && IsEntity(target);
         }
 
         private static string RemoveSpecialPrefix(string specialName) {
