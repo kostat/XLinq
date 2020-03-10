@@ -4,7 +4,7 @@ using Streamx.Linq.SQL.Grammar;
 namespace Streamx.Linq.SQL {
     public interface ISortOrder { }
     
-    public interface IBy : INullsSortOrder, IComparable<IBy>, IComparable {
+    public interface IBy : INullsSortOrder {
         [Function(OmitParentheses = true)]
         INullsSortOrder ASC { get; }
 

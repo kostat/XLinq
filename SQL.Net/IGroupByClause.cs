@@ -11,5 +11,5 @@ namespace Streamx.Linq.SQL {
         void WITH_ROLLUP();
     }
     
-    public interface IGroupingSet : IBy { }
+    public interface IGroupingSet : IBy, IComparable { }
 }
