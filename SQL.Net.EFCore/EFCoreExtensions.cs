@@ -10,7 +10,7 @@ using Streamx.Linq.ExTree;
 using Streamx.Linq.SQL.EFCore.DSL;
 using Streamx.Linq.SQL.Grammar;
 
-[assembly:InternalsVisibleTo("SQL.Net.EFCore.Tests")]
+[assembly: InternalsVisibleTo("SQL.Net.EFCore.Tests")]
 
 namespace Streamx.Linq.SQL.EFCore {
     // ReSharper disable once InconsistentNaming
@@ -39,7 +39,7 @@ namespace Streamx.Linq.SQL.EFCore {
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => -s1, (int s1) => -s1);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => !s1, (bool s1) => !s1);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => ~s1, (int s1) => ~s1);
-            ExLINQ.Configuration.RegisterMethodSubstitution((int s1) => (Point)s1, (int s1) => s1);
+            ExLINQ.Configuration.RegisterMethodSubstitution((int s1) => (Point) s1, (int s1) => s1);
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local
@@ -119,6 +119,38 @@ namespace Streamx.Linq.SQL.EFCore {
         public static int Query<TEntity, TEntity1>(this DatabaseFacade source, Action<TEntity, TEntity1> query)
             where TEntity : class
             where TEntity1 : class =>
+            Query0(source, query);
+
+        public static int Query<TEntity, TEntity1, TEntity2>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2> query)
+            where TEntity : class
+            where TEntity1 : class
+            where TEntity2 : class =>
+            Query0(source, query);
+
+        public static int Query<TEntity, TEntity1, TEntity2, TEntity3>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2, TEntity3> query)
+            where TEntity : class
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class =>
+            Query0(source, query);
+
+        public static int Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DatabaseFacade source,
+            Action<TEntity, TEntity1, TEntity2, TEntity3, TEntity4> query)
+            where TEntity : class
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class
+            where TEntity4 : class =>
+            Query0(source, query);
+
+        public static int Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DatabaseFacade source,
+            Action<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5> query)
+            where TEntity : class
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class
+            where TEntity4 : class
+            where TEntity5 : class =>
             Query0(source, query);
 
         private static int Query0<TDelegate>(DatabaseFacade db, TDelegate query)

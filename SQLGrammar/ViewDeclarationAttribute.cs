@@ -1,15 +1,15 @@
 using System;
 
 namespace Streamx.Linq.SQL.Grammar {
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method), Notation]
     public sealed class ViewDeclarationAttribute : Attribute {
 
-        [AttributeUsage(AttributeTargets.Method)]
+        [AttributeUsage(AttributeTargets.Method), Notation]
         public sealed class FromAttribute : Attribute {
             public bool Aliased { get; set; }
         }
 
-        [AttributeUsage(AttributeTargets.Method)]
+        [AttributeUsage(AttributeTargets.Method), Notation]
         public sealed class RowAttribute : Attribute {
             public bool Aliased { get; set; }
         }

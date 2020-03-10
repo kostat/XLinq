@@ -210,7 +210,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function]
-        public static long ROUND(long numeric,
+        public static T ROUND<T>(T numeric,
             int length) {
             throw new NotSupportedException();
         }

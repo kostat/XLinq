@@ -10,7 +10,12 @@ using Streamx.Linq.SQL.Grammar;
 
 namespace Streamx.Linq.SQL.EFCore.DSL {
     partial class DSLInterpreter {
-        class DynamicConstant : ISequence<char> {
+
+        interface IValueHolder {
+            Object Value { get; }
+        }
+        
+        class DynamicConstant : ISequence<char>, IValueHolder {
             private ISequence<char> _string;
 
             private readonly object value;
@@ -62,7 +67,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 return GetEnumerator();
             }
 
-            public bool IsEmpty => _string.IsEmpty;
+            public bool IsEmpty => value is String s && s.Length == 0;
+            public Object Value => value;
 
             public int Length {
                 get {
@@ -166,14 +172,14 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        internal sealed class ParameterRef : DelegatedSequence {
+        internal sealed class ParameterRef : DelegatedSequence, IValueHolder {
             private ISequence<char> seq;
-            public Object value { get; }
+            public Object Value { get; }
             private readonly IList<Object> indexedParameters;
             private readonly bool isCollection;
 
             public ParameterRef(object value, IList<object> indexedParameters, bool isCollection) {
-                this.value = value;
+                this.Value = value;
                 this.indexedParameters = indexedParameters;
                 this.isCollection = isCollection;
             }
@@ -186,9 +192,9 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
                         if (isCollection) {
                             b.Append(LEFT_PARAN);
-                            if (value != null) {
+                            if (Value != null) {
                                 var starting = b.Length;
-                                foreach (var item in (IEnumerable)value) {
+                                foreach (var item in (IEnumerable)Value) {
                                     var index = indexedParameters.Count;
                                     indexedParameters.Add(item);
                                     b.Append(LEFT_BRACE).Append(index).Append(RIGHT_BRACE + COMMA);
@@ -201,7 +207,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                         }
                         else {
                             var index = indexedParameters.Count;
-                            indexedParameters.Add(value);
+                            indexedParameters.Add(Value);
                             b.Append(LEFT_BRACE).Append(index).Append(RIGHT_BRACE);
                         }
 

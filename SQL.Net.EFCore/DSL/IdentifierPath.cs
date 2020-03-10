@@ -98,7 +98,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 bool withoutInstance,
                 IDictionary<String, ISequence<char>> secondaryResolver) {
                 if (inst is DSLInterpreter.ParameterRef @ref)
-                    throw TranslationError.CANNOT_DEREFERENCE_PARAMETERS.getError(@ref.value,
+                    throw TranslationError.CANNOT_DEREFERENCE_PARAMETERS.getError(@ref.Value,
                         resolution);
                 if (inst.isNullOrEmpty())
                     return this;

@@ -125,6 +125,11 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
+        [TableDeclaration]
+        public static T ToTable<T>(String table, String schema = null) {
+            throw new NotSupportedException();
+        }
+
         /*[CommonTableExpression(CommonTableExpressionType.Decorator)]
         [Function("", OmitParentheses = true, ParameterContext = ParameterContext.FromWithoutAlias, ParameterContextCapabilities = new[] {
             nameof(Capability.ALIAS_INSERT)

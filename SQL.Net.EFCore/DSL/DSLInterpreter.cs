@@ -681,6 +681,17 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     }
                 }
 
+                if (m.IsDefined(typeof(TableDeclarationAttribute))) {
+                    return () => {
+                        var tableNameParts = boundArgs1.Select(_ => _()).ToList();
+                        var tableNamePart = tableNameParts[0];
+                        var tableName = (tableNamePart is IValueHolder h1 ? h1.Value : tableNamePart).ToString();
+                        tableNamePart = tableNameParts[1];
+                        var schema = (tableNamePart is IValueHolder h2 ? h2.Value : tableNamePart).ToString();
+                        return CalcTableReference(e, ReferenceEquals(schema, NULL) ? tableName : schema + DOT + tableName);
+                    };
+                }
+
                 /*if (m.IsDefined(typeof(ParameterAttribute))) { //isAnnotationPresent(Parameter.class)
                     //if (!FluentJPA.checkLicense())
                     //    throw TranslationError.REQUIRES_LICENSE.getError(Normalizer.DYNAMIC_QUERIES_FUNCTIONALITY);
@@ -857,7 +868,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                             Func<ISequence<char>, ISequence<char>> renderer = setupParameterRenderingContext(context,
                                 expression(arg, subQueries, aliases));
 
-                            return literal != null
+                            return literal != null && literal.Quote
                                 ? renderer.andThen(seq => new StringBuilder(seq.Length + 2).Append(SINGLE_QUOTE_CHAR)
                                     .Append(seq)
                                     .Append(SINGLE_QUOTE_CHAR).AsSequence())
@@ -1034,7 +1045,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                                 Func<int, Func<ISequence<char>, ISequence<char>>> paramBuilder = limit => p => {
                                     if (p != null) {
                                         return (p is ParameterRef @ref)
-                                            ? view.getSelect(@ref.value, limit, viewFrom.Aliased)
+                                            ? view.getSelect(@ref.Value, limit, viewFrom.Aliased)
                                             : view.getSelect(resolveLabel(aliases, p), limit, viewFrom.Aliased);
                                     }
                                     else
@@ -1362,44 +1373,20 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     if (parameterResults.TryGetValue(e, out var seq))
                         return seq;
                     
-                        var resultType = e.getResultType();
-                        if (resultType.IsDefined(typeof(NoOpAttribute)))
-                            return null;
-                        if (!isEntityLike(resultType))
-                            throw TranslationError.CANNOT_CALCULATE_TABLE_REFERENCE.getError(resultType);
-                        ISequence<char> tableRef = calcOverrides(
-                            new StringBuilder().Append(TABLE_ALIAS_PREFIX).Append(parameterCounter++).AsSequence(), resultType, null);
-                        tableRefs.put(tableRef, PRIMARY);
-                        return registerJoinTable(tableRef, e);
-                //     }
-                //
-                //     return registerJoinTable(t.get(index), e);
-                };
+                        var tableRef = CalcTableReference(e, PRIMARY);
+                        return parameterResults[e] = tableRef;
+            };
         }
 
-        /*private void registerSecondaryTable(ISequence<char> primary,
-            String secondary,
-            ISequence<char> secondaryAlias) {
-            if (tableSecondaryRefs.IsEmpty())
-                tableSecondaryRefs = new Dictionary<ISequence<char>, IDictionary<string, ISequence<char>>>();
-
-            tableSecondaryRefs.computeIfAbsent(primary, x -> new HashMap<>()).put(secondary, secondaryAlias);
-        }*/
-
-        private ISequence<char> registerJoinTable(ISequence<char> seq,
-            Expression e) {
-
-            parameterResults[e] = seq;
-            
-            /*Member joinTable = joinTables.get(e);
-            if (joinTable != null)
-                joinTablesForFROM.put(seq, joinTable);
-            else {
-                joinTable = collectionTables.get(e);
-                if (joinTable != null)
-                    collectionTablesForFROM.put(seq, joinTable);
-            }*/
-            return seq;
+        private ISequence<char> CalcTableReference(Expression e, String table) {
+            var resultType = e.getResultType();
+            if (resultType.IsDefined(typeof(NoOpAttribute)))
+                return null;
+            if (!isEntityLike(resultType))
+                throw TranslationError.CANNOT_CALCULATE_TABLE_REFERENCE.getError(resultType);
+            ISequence<char> tableRef = calcOverrides(new StringBuilder().Append(TABLE_ALIAS_PREFIX).Append(parameterCounter++).AsSequence(), resultType, null);
+            tableRefs.put(tableRef, table);
+            return tableRef;
         }
 
         protected override Expression VisitUnary(UnaryExpression node) {
