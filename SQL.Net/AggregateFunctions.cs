@@ -9,7 +9,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function]
-        public static int GROUPING(params IComparable[] expressions) {
+        public static byte GROUPING(params IComparable[] expressions) {
             throw new NotSupportedException();
         }
 

@@ -16,7 +16,7 @@ namespace Streamx.Linq.SQL {
                 return r.AsSingle();
             });
         }
-        
+
         public static TProperty? pick<TEntity, TProperty>(TEntity entity, TProperty? expression)
             where TEntity : class, new()
             where TProperty : struct, IComparable {
@@ -26,7 +26,7 @@ namespace Streamx.Linq.SQL {
                 return r.AsSingle();
             });
         }
-        
+
         public static ICollection<TProperty> collect<TEntity, TProperty>(TEntity entity, TProperty expression)
             where TEntity : class, new()
             where TProperty : IComparable {
@@ -36,7 +36,7 @@ namespace Streamx.Linq.SQL {
                 return r.AsCollection();
             });
         }
-        
+
         public static ICollection<TProperty?> collect<TEntity, TProperty>(TEntity entity, TProperty? expression)
             where TEntity : class, new()
             where TProperty : struct, IComparable {
@@ -46,11 +46,27 @@ namespace Streamx.Linq.SQL {
                 return r.AsCollection();
             });
         }
-        
-        private static readonly Keyword ASTERISK  = new Keyword("*");
-        
+
+        private static readonly Keyword ASTERISK = new Keyword("*");
+
         public static long COUNT() {
             return AggregateFunctions.COUNT(ASTERISK);
+        }
+
+        /**
+     * A shortcut for<br>
+     * 
+     * <pre>
+     * {@code SELECT(<tableRef>);
+     * FROM(<tableRef>);}
+     * </pre>
+     *
+     * which translates to {@code SELECT tableRef.* FROM tableRef}
+     */
+        public static IEntitySelectClause<T> SelectAll<T>(T tableRef) where T : class, new() {
+            var r = SELECT(tableRef);
+            FROM(tableRef);
+            return r;
         }
     }
 }

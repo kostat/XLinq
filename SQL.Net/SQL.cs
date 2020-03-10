@@ -160,7 +160,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function]
-        public static IBy GROUPING_SETS(params IGroupingSet[] expressions) {
+        public static IComparable GROUPING_SETS(params IGroupingSet[] expressions) {
             throw new NotSupportedException();
         }
 
