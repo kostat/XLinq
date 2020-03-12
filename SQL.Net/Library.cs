@@ -49,7 +49,7 @@ namespace Streamx.Linq.SQL {
 
         private static readonly Keyword ASTERISK = new Keyword("*");
 
-        public static long COUNT() {
+        public static int COUNT() {
             return AggregateFunctions.COUNT(ASTERISK);
         }
 

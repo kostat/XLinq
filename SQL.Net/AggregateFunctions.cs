@@ -14,7 +14,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function]
-        public static long COUNT(IComparable expression) {
+        public static int COUNT(IComparable expression) {
             throw new NotSupportedException();
         }
 

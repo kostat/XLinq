@@ -186,7 +186,7 @@ namespace Streamx.Linq.ExTree {
                 case ILOpCode.And:
                     first = _exprStack.Pop();
                     second = _exprStack.Pop();
-                    e = first.IsInt31() ? second : Expression.And(second, first);
+                    e = first.IsInt31() ? second : first.IsBool() && second.IsBool() ? Expression.AndAlso(second, first) : Expression.And(second, first);
                     break;
                 case ILOpCode.Ceq:
                     first = _exprStack.Pop();
@@ -560,7 +560,8 @@ namespace Streamx.Linq.ExTree {
 
                         ExpressionStack.BranchExpression be = new ExpressionStack.BranchExpression(parentStack,
                             rootTest,
-                            first, l);
+                            first,
+                            l);
 
                         parentStack.Pop(); // old branch
 

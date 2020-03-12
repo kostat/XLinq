@@ -32,7 +32,7 @@ namespace Streamx.Linq.SQL {
 
         // Logical operators
         [Function(OmitParentheses = true)]
-        public static T ALL<T>(T subQuery) where T : IComparable {
+        public static T ALL<T>(IEnumerable<T> subQuery) where T : IComparable {
             throw new NotSupportedException();
         }
 
@@ -44,7 +44,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function(OmitParentheses = true)]
-        public static T ANY<T>(T subQuery) where T : IComparable {
+        public static T ANY<T>(IEnumerable<T> subQuery) where T : IComparable {
             throw new NotSupportedException();
         }
 
@@ -147,7 +147,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function(OmitParentheses = true)]
-        public static T SOME<T>(T subQuery) {
+        public static T SOME<T>(IEnumerable<T> subQuery) {
             throw new NotSupportedException();
         }
 
