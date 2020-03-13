@@ -23,6 +23,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         private const string DOT = ".";
         private const string AND = "AND";
         private const string EQUAL_SIGN = "=";
+        private const string NOT_EQUAL_SIGN = "<>";
         private const string KEYWORD_DELIMITER = " ";
         private const string SEP_AS_SEP = KEYWORD_DELIMITER + AS + KEYWORD_DELIMITER;
         private const char KEYWORD_DELIMITER_CHAR = ' ';
@@ -33,6 +34,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         private const string LEFT_BRACE = "{";
         private const string RIGHT_BRACE = "}";
         private const char SINGLE_QUOTE_CHAR = '\'';
+        private const string IS_NULL = "IS NULL";
         private const string IS_NOT_NULL = "IS NOT NULL";
         private const string NULL = "NULL";
 
@@ -130,12 +132,14 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 var left = efirst();
                 var right = esecond();
 
+                bool isAssociation(Expression first, Expression second) =>
+                    (isEntityLike(first.Type) || isCollection(first.Type)) && (isEntityLike(second.Type) || isCollection(second.Type));
+                
+                var aliases = getAliases();
                 switch (e.NodeType) {
                     case ExpressionType.Equal:
-                        var aliases = getAliases();
                         return () => {
-                            bool isAssoc = (isEntityLike(first.Type) || isCollection(first.Type))
-                                           && (isEntityLike(second.Type) || isCollection(second.Type));
+                            var isAssoc = isAssociation(first, second);
 
                             if (isAssoc)
                                 renderingAssociation = true;
@@ -144,7 +148,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                             if (isAssoc) {
                                 renderingAssociation = false;
                                 return renderAssociation(new StringBuilder(), getAssociation(first, second), aliases, lseq,
-                                    rseq).AsSequence();
+                                    rseq, true);
                             }
 
                             if (lseq == null || Equals(NULL, lseq.ToString()))
@@ -158,8 +162,17 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
                     case ExpressionType.NotEqual:
                         return () => {
+                            var isAssoc = isAssociation(first, second);
+
+                            if (isAssoc)
+                                renderingAssociation = true;
                             var lseq = left();
                             var rseq = right();
+                            if (isAssoc) {
+                                renderingAssociation = false;
+                                return renderAssociation(new StringBuilder(), getAssociation(first, second), aliases, lseq,
+                                    rseq, false);
+                            }
                             
                             if (lseq == null || Equals(NULL, lseq.ToString()))
                                 return rseq.IsNotNull();
@@ -254,31 +267,44 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             };
         }
 
-        private StringBuilder renderAssociation(StringBuilder @out,
+        private ISequence<char> renderAssociation(StringBuilder @out,
             Association assoc,
             IDictionary<ISequence<char>, ISequence<char>> aliases,
             ISequence<char> lseq,
-            ISequence<char> rseq) {
+            ISequence<char> rseq,
+            bool equals) {
             @out.Append(LEFT_PARAN);
 
             for (int i = 0; i < assoc.Cardinality; i++) {
                 if (@out.Length > 1)
                     @out.Append(KEYWORD_DELIMITER + AND + KEYWORD_DELIMITER);
 
-                if (IdentifierPath.isResolved(lseq))
-                    @out.Append(lseq);
-                else
-                    @out.Append(resolveLabel(aliases, lseq)).Append(DOT).Append(assoc.Left.get(i));
+                if (Equals(lseq.ToString(), NULL)) {
+                    appendSide(rseq, assoc.Right);
+                    @out.Append(KEYWORD_DELIMITER + (equals ? IS_NULL : IS_NOT_NULL));
+                    continue;
+                }
+ 
+                appendSide(lseq, assoc.Left);
+                
+                if (Equals(rseq.ToString(), NULL)) {
+                    @out.Append(KEYWORD_DELIMITER + (equals ? IS_NULL : IS_NOT_NULL));
+                    continue;
+                }
 
-                @out.Append(KEYWORD_DELIMITER + EQUAL_SIGN + KEYWORD_DELIMITER);
+                @out.Append(KEYWORD_DELIMITER + (equals ? EQUAL_SIGN : NOT_EQUAL_SIGN) + KEYWORD_DELIMITER);
 
-                if (IdentifierPath.isResolved(rseq))
-                    @out.Append(rseq);
-                else
-                    @out.Append(resolveLabel(aliases, rseq)).Append(DOT).Append(assoc.Right.get(i));
+                appendSide(rseq, assoc.Right);
+
+                void appendSide(ISequence<char> sequence, IList<ISequence<char>> side) {
+                    if (IdentifierPath.isResolved(sequence))
+                        @out.Append(sequence);
+                    else
+                        @out.Append(resolveLabel(aliases, sequence)).Append(DOT).Append(side.get(i));
+                }
             }
 
-            return @out.Append(RIGHT_PARAN);
+            return @out.Append(RIGHT_PARAN).AsSequence();
         }
 
         protected override Expression VisitConstant(ConstantExpression node) {
