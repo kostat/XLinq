@@ -205,13 +205,6 @@ namespace Streamx.Linq.SQL.TransactSQL {
         }
 
         [Function]
-        public static String DATEADD(DatePart datepart,
-            int delta,
-            String date) {
-            throw new NotSupportedException();
-        }
-
-        [Function]
         public static int DATEDIFF(DatePart datepart,
             DateTime from,
             DateTime to) {
@@ -226,13 +219,6 @@ namespace Streamx.Linq.SQL.TransactSQL {
         }
 
         [Function]
-        public static int DATEDIFF(DatePart datepart,
-            String from,
-            String to) {
-            throw new NotSupportedException();
-        }
-
-        [Function]
         public static long DATEDIFF_BIG(DatePart datepart,
             DateTime from,
             DateTime to) {
@@ -243,13 +229,6 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static long DATEDIFF_BIG(DatePart datepart,
             DateTimeOffset from,
             DateTimeOffset to) {
-            throw new NotSupportedException();
-        }
-
-        [Function]
-        public static long DATEDIFF_BIG(DatePart datepart,
-            String from,
-            String to) {
             throw new NotSupportedException();
         }
 
@@ -329,7 +308,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
 
         [Function]
         public static String DATENAME(DatePart datepart,
-            String date) {
+            int date) {
             throw new NotSupportedException();
         }
 
@@ -347,7 +326,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
 
         [Function]
         public static int DATEPART(DatePart datepart,
-            String date) {
+            int date) {
             throw new NotSupportedException();
         }
 

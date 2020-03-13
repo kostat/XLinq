@@ -16,7 +16,7 @@ namespace Streamx.Linq.SQL {
     [NoOp]
     public interface IEntitySelectClause<T> : ISelectClause, IQueryResult<T> where T : class {
         [CommonTableExpression(CommonTableExpressionType.Self)]
-        T Self();
+        T Current();
 
         [Function(OmitParentheses = true,
             ParameterContext = ParameterContext.FromWithoutAlias,
