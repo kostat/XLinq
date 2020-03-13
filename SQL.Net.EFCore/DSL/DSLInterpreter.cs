@@ -132,8 +132,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 var left = efirst();
                 var right = esecond();
 
-                bool isAssociation(Expression first, Expression second) =>
-                    (isEntityLike(first.Type) || isCollection(first.Type)) && (isEntityLike(second.Type) || isCollection(second.Type));
+                bool isAssociation(Expression leftExpr, Expression rightExpr) =>
+                    (isEntityLike(leftExpr.Type) || isCollection(leftExpr.Type)) && (isEntityLike(rightExpr.Type) || isCollection(rightExpr.Type));
                 
                 var aliases = getAliases();
                 switch (e.NodeType) {
