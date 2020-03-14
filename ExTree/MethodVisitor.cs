@@ -25,6 +25,7 @@ namespace Streamx.Linq.ExTree {
 
         // ReSharper disable once PossibleNullReferenceException
         private static readonly int HAS_VALUE = typeof(Nullable<>).GetProperty("HasValue").GetMethod.MetadataToken;
+        private static readonly int ARRAY_EMPTY = typeof(Array).GetMethod("Empty").MetadataToken;
 
         public MethodVisitor(Expression target, List<ParameterExpression> @params, Type returnType) {
             _target = target;
@@ -762,7 +763,7 @@ namespace Streamx.Linq.ExTree {
                 var param = @params[i];
                 var isVararg = param.IsDefined(typeof(ParamArrayAttribute));
                 var expression = _exprStack.Pop();
-                if (isVararg && expression.NodeType != ExpressionType.NewArrayInit) {
+                if (isVararg && expression is MethodCallExpression mce && mce.Method.MetadataToken == ARRAY_EMPTY) {
                     // ReSharper disable once AssignNullToNotNullAttribute
                     expression = Expression.NewArrayInit(expression.Type.GetElementType(), Array.Empty<Expression>());
                 }

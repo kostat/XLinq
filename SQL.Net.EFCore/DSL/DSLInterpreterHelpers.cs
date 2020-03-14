@@ -129,11 +129,14 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 int limit) {
                 if (limit <= 0)
                     limit = producers.Count + limit;
-                Object[] t = {value};
-                return compiled().Take(limit)
-                    .Select(f => f.DynamicInvoke(t))
-                    .Select(p => dsl.registerParameter(p))
-                    .ToList();
+
+                return producers.Take(limit).Select(p => p()).ToList();
+                
+                // Object[] t = {value};
+                // return compiled().Take(limit)
+                //     .Select(f => f.DynamicInvoke(t))
+                //     .Select(p => dsl.registerParameter(p))
+                //     .ToList();
             }
 
             private IList<ISequence<char>> getInitializers(//List<ISequence<char>> it,
@@ -144,8 +147,12 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             }
 
             private IList<Delegate> compiled() {
-                if (_compiled == null)
-                    throw new NotImplementedException();
+                if (_compiled == null) {
+                    // var param = (ParameterExpression)arguments[0];
+                    // _compiled = arguments.Skip(1).Select(_ => Expression.Lambda(_, param).Compile()).ToList();
+                    _compiled = expressions.Select(_ => Expression.Lambda(_).Compile()).ToList();
+                }
+                    // throw new NotImplementedException();
                 // compiled = expressions
                 //         .Select(e => ((InvocationExpression) e).Expression)
                 //         .map(ie => ie is LambdaExpression ? ((LambdaExpression) ie).Compile()

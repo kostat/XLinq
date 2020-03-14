@@ -1046,6 +1046,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
                             var argsBuilderBound = new List<Func<ISequence<char>, ISequence<char>>>();
                             pp = expandVarArgs(pp, argsBuilder, argsBuilderBound);
+                            Array.Resize(ref contextAttributes, pp.Count);
                             
                             var viewRow = m.GetCustomAttribute<ViewDeclarationAttribute.RowAttribute>();
                             if (viewRow != null) {
