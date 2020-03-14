@@ -10,10 +10,16 @@ namespace Streamx.Linq.ExTree {
         public static readonly Expression TRUE = Expression.Constant(true);
 
         public static bool IsInt31(this Expression e) =>
-            e is ConstantExpression eConst && ((e.IsInt32() && (int) eConst.Value == 31) || (e.IsBool() && (bool)eConst.Value));
+            e is ConstantExpression eConst && ((e.IsInt32() && (int) eConst.Value == 31) || (e.IsBool() && (bool) eConst.Value));
 
         public static bool IsSynthetic(this MemberInfo typeInfo) =>
             typeInfo.IsDefined(typeof(CompilerGeneratedAttribute));
+
+        public static bool HasCalls(this Expression e) {
+            var visitor = new HasCallsChecker();
+            visitor.Visit(e);
+            return visitor.HasCalls;
+        }
 
         public static bool IsConstBoolLike(this Expression e, out bool value) {
             if (e is ConstantExpression eConst) {
@@ -38,6 +44,7 @@ namespace Streamx.Linq.ExTree {
 
         public static bool IsBool(this Expression e) => e.Type == typeof(bool);
         private static bool IsInt32(this Expression e) => e.Type == typeof(int);
+        public static bool IsVoid(this Expression e) => e.Type == typeof(void);
 
         private static BinaryExpression CreateNumeric(ExpressionType expressionType, Expression left, Expression right) {
             var isLNumeric = left.Type.IsNumeric();
@@ -207,7 +214,7 @@ namespace Streamx.Linq.ExTree {
             Expression ifFalse) {
             if (!test.IsBool())
                 throw new ArgumentException("test is " + test.Type);
-            
+
             bool value;
             // reduce conditional
             if (ifTrue.IsConstBoolLike(out value)) {
@@ -229,6 +236,28 @@ namespace Streamx.Linq.ExTree {
             }
 
             return Expression.Condition(test, ifTrue, ifFalse);
+        }
+
+        sealed class HasCallsChecker : ExpressionVisitor {
+            public bool HasCalls { get; private set; }
+
+            protected override Expression VisitMethodCall(MethodCallExpression node) {
+                HasCalls = HasCalls || !node.Method.IsSpecialName;
+                return HasCalls ? node : base.VisitMethodCall(node);
+            }
+
+            protected override Expression VisitInvocation(InvocationExpression node) {
+                HasCalls = true;
+                return node;
+            }
+
+            protected override Expression VisitNewArray(NewArrayExpression node) {
+                return node;
+            }
+
+            protected override Expression VisitLambda<T>(Expression<T> node) {
+                return node;
+            }
         }
     }
 }

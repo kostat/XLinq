@@ -13,7 +13,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         public static T As<T>(this Expression e) where T : class => (XExpression<T>) e;
         public static XExpression<T> AsXExpression<T>(this T f) where T : Delegate => (XExpression<T>) f;
         public static bool IsSynthetic(this MemberInfo typeInfo) => typeInfo.IsDefined(typeof(CompilerGeneratedAttribute));
-        public static bool IsLocal(this MethodInfo typeInfo) => typeInfo.IsStatic && typeInfo.IsDefined(typeof(LocalAttribute));
+        public static bool IsLocal(this MethodInfo typeInfo) => typeInfo.IsDefined(typeof(LocalAttribute));
     }
 
 

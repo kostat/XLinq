@@ -11,7 +11,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         protected override Expression VisitMethodCall(MethodCallExpression node) {
 
             if (node.Method.IsLocal()) {
-                var result = node.Method.Invoke(null, EvaluateArgumentsForLocalFunction(node.Arguments));
+                var result = node.Method.Invoke(node.Object != null ? Expression.Lambda(node.Object).Compile().DynamicInvoke() : null,
+                    EvaluateArgumentsForLocalFunction(node.Arguments));
                 // TODO: re-parse
                 return Expression.Constant(result, node.Type);
             }
@@ -21,11 +22,11 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 return Replacer.Convert(Visit(replaced), node.Type);
             }
 
-            if (node.Method.IsStatic) {
+            if (!node.Method.IsAbstract && !node.Method.IsSpecialName) {
                 if (IsNotation(node.Method))
                     return base.VisitMethodCall(node);
 
-                var e = ExpressionTree.Parse(null, node.Method);
+                var e = ExpressionTree.Parse(node.Object, node.Method);
                 ExLINQ.PrintExpression(e);
                 return Visit(Expression.Invoke(e, node.Arguments));
             }

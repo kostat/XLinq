@@ -89,7 +89,7 @@ namespace Streamx.Linq.ExTree {
                         _statements.RemoveAt(lastIndex);
                         _statements.Add(var);
                     }
-                    else if (last.Type != typeof(void)) {
+                    else if (!last.IsVoid()) {
                         var = Expression.Variable(last.Type, LocalVariable.VARIABLE_PREFIX + _exprStack.LocalVariables.Length);
                         _variables.Add(var);
                         _statements[lastIndex] = Expression.Assign(var, last);
@@ -102,7 +102,7 @@ namespace Streamx.Linq.ExTree {
 
                     for (var i = statementsLastIndex; i >= 0; i--) {
                         last = _statements[i];
-                        if (last.Type != typeof(void)) {
+                        if (!last.IsVoid()) {
                             newLast = TypeConverter.Convert(last, _returnType);
                             if (newLast != last)
                                 _statements[i] = newLast;
@@ -279,6 +279,11 @@ namespace Streamx.Linq.ExTree {
                     break;
                 case ILOpCode.Dup:
                     e = _exprStack.Peek();
+                    if (e.HasCalls()) {
+                        e = CreateVariableForExpression(_exprStack.Pop());
+                        _exprStack.Push(e);
+                    }
+
                     break;
                 case ILOpCode.Ldelem:
                 case ILOpCode.Ldelem_i1:
@@ -327,16 +332,10 @@ namespace Streamx.Linq.ExTree {
                     if (isInteresting(e)) {
                         for (var i = 0; i < _exprStack.Count; i++) {
                             var ee = _exprStack[i];
-                            if (ee.Type == typeof(void) || !isInteresting(ee))
+                            if (!isInteresting(ee))
                                 continue;
 
-                            var var = Expression.Variable(ee.Type, LocalVariable.VARIABLE_PREFIX + _customVarIndex++);
-                            _variables.Add(var);
-                            var assign = Expression.Assign(var, ee);
-                            _statements.Add(assign);
-                            _exprStack[i] = var;
-                            _exprStack.TrackOrder(assign, ee);
-                            _exprStack.TrackOrder(var);
+                            _exprStack[i] = CreateVariableForExpression(ee);
                         }
 
                         _statements.Add(e);
@@ -401,6 +400,16 @@ namespace Streamx.Linq.ExTree {
             }
 
             _exprStack.Push(e);
+        }
+
+        private ParameterExpression CreateVariableForExpression(Expression ee) {
+            var var = Expression.Variable(ee.Type, LocalVariable.VARIABLE_PREFIX + _customVarIndex++);
+            _variables.Add(var);
+            var assign = Expression.Assign(var, ee);
+            _statements.Add(assign);
+            _exprStack.TrackOrder(assign, ee);
+            _exprStack.TrackOrder(var);
+            return var;
         }
 
         public bool VisitJumpInsn(ILOpCode opCode, Label label) {
@@ -737,7 +746,12 @@ namespace Streamx.Linq.ExTree {
                     throw NotLambda(opCode);
             }
 
-            _exprStack.Push(e);
+            if (e.IsVoid()) {
+                _exprStack.TrackOrder(e);
+                _statements.Add(e);
+            }
+            else
+                _exprStack.Push(e);
         }
 
         private Expression[] CreateArguments(ParameterInfo[] @params) {
@@ -776,9 +790,11 @@ namespace Streamx.Linq.ExTree {
                     break;
                 case ILOpCode.Castclass:
                 case ILOpCode.Unbox:
-                case ILOpCode.Unbox_any:
                 case ILOpCode.Constrained:
                     e = Expression.Convert(_exprStack.Pop(), resultType);
+                    break;
+                case ILOpCode.Unbox_any:
+                    e = Expression.Convert(Expression.Convert(_exprStack.Pop(), typeof(object)), resultType);
                     break;
                 case ILOpCode.Initobj:
                     e = _exprStack.Pop();
