@@ -23,7 +23,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             }
 
             if (!node.Method.IsAbstract && !node.Method.IsSpecialName) {
-                if (IsNotation(node.Method))
+                if (node.Method.IsNotation())
                     return base.VisitMethodCall(node);
 
                 var e = ExpressionTree.Parse(node.Object, node.Method);
@@ -46,15 +46,6 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
         static object[] EvaluateArgumentsForLocalFunction(IEnumerable<Expression> args) {
             return args.Select(_ => Expression.Lambda(_).Compile().DynamicInvoke()).ToArray();
-        }
-
-        static bool IsNotation(MemberInfo t) {
-            foreach (var a in t.GetCustomAttributes()) {
-                if (a.GetType().IsDefined(typeof(NotationAttribute)))
-                    return true;
-            }
-
-            return false;
         }
 
         sealed class Replacer : ExpressionVisitor {

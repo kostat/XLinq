@@ -1333,12 +1333,14 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             SubQueryManager subQueries,
             IDictionary<ISequence<char>, ISequence<char>> aliases) {
             bool isEntity = isEntityLike(e.getResultType());
+            if (isEntity && e is MethodCallExpression mce && !mce.Method.IsTuple())
+                isEntity = false;
 
             return seq => {
                 if (renderingContext == ParameterContext.Alias)
                     return extractColumnName(seq);
 
-                if (e is ParameterExpression || (e is MemberExpression me && me.Expression.Type.IsSynthetic())) {
+                // if (e is ParameterExpression || (e is MemberExpression me && me.Expression.Type.IsSynthetic())) {
                     if (isEntity) {
                         switch (renderingContext) {
                             case ParameterContext.Select:
@@ -1352,7 +1354,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                                 return handleFromClause(seq, e, aliases, subQueries);
                         }
                     }
-                }
+                // }
 
                 if (renderingContext == ParameterContext.Select) {
                     ISequence<char> label = aliases.get(seq);

@@ -435,12 +435,12 @@ namespace Streamx.Linq.SQL.TransactSQL {
 
         // General
         // OUTPUT Clause
-        [Function(OmitParentheses = true)]
+        [Function(OmitParentheses = true), Tuple]
         public static T INSERTED<T>() {
             throw new NotSupportedException();
         }
 
-        [Function(OmitParentheses = true)]
+        [Function(OmitParentheses = true), Tuple]
         public static T DELETED<T>() {
             throw new NotSupportedException();
         }
@@ -450,9 +450,6 @@ namespace Streamx.Linq.SQL.TransactSQL {
             throw new NotSupportedException();
         }
 
-        /**
-     * OUTPUT ... INTO is not supported
-     */
         [Function(OmitParentheses = true, ParameterContext = ParameterContext.Select)]
         public static IEntitySelectClause<T> OUTPUT<T>(T entity,
             params IAlias[] expressions) where T : class, new() {
