@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 
 namespace Streamx.Linq.SQL.TransactSQL {
+   /// <summary>
+   /// https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-data-type-mappings
+   /// </summary>
     public static class DataTypes {
 
         // Exact numerics
