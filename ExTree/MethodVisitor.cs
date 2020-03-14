@@ -25,6 +25,7 @@ namespace Streamx.Linq.ExTree {
 
         // ReSharper disable once PossibleNullReferenceException
         private static readonly int HAS_VALUE = typeof(Nullable<>).GetProperty("HasValue").GetMethod.MetadataToken;
+        // ReSharper disable once PossibleNullReferenceException
         private static readonly int ARRAY_EMPTY = typeof(Array).GetMethod("Empty").MetadataToken;
 
         public MethodVisitor(Expression target, List<ParameterExpression> @params, Type returnType) {
