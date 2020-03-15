@@ -84,6 +84,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         private bool renderingAssociation;
 
         private readonly IModel model;
+        private string blockSequenceSeparator;
 
         public DSLInterpreter(IModel model) {
             this.model = model;
@@ -1032,7 +1033,16 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
                         //return () => {
 
-                            var pp = (IList<ISequence<char>>)boundArgs1.Select(_ => _()).ToList();
+                            var pp = (IList<ISequence<char>>)boundArgs1.Select((_, i) => {
+                                var sequenceSeparator = this.blockSequenceSeparator;
+                                this.blockSequenceSeparator = contextAttributes[i]?.BlockSequenceSeparator;
+                                try {
+                                    return _();
+                                }
+                                finally {
+                                    this.blockSequenceSeparator = sequenceSeparator;
+                                }
+                            }).ToList();
                             var originalParams = pp;
 
                             ISequence<char> currentSubQuery = (cte != null
@@ -1494,14 +1504,14 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                                 continue;
 
                             if (combined != null) {
-                                combined.AppendLine().Append(x);
+                                combined.AppendLine(blockSequenceSeparator ?? "").Append(x);
                                 continue;
                             }
 
                             combined = new StringBuilder();
                             lastResult = Strings.trim(lastResult);
                             if (!Strings.isNullOrEmpty(lastResult))
-                                combined.AppendLine(lastResult.ToString());
+                                combined.Append(lastResult.ToString()).AppendLine(blockSequenceSeparator ?? "");
 
                             combined.Append(x);
                         }

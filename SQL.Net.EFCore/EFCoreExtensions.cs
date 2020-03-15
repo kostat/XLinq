@@ -28,8 +28,8 @@ namespace Streamx.Linq.SQL.EFCore {
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 ^ s2, (int s1, int s2) => s1 ^ s2);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, int s2) => s1 << s2, (int s1, int s2) => s1 << s2);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, int s2) => s1 >> s2, (int s1, int s2) => s1 >> s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 == s2, (object s1, object s2) => s1 == s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 != s2, (object s1, object s2) => s1 != s2);
+            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 == s2, (float s1, float s2) => (int)s1 == (int)s2);
+            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 != s2, (float s1, float s2) => (int)s1 != (int)s2);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 < s2, (int s1, int s2) => s1 < s2);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 > s2, (int s1, int s2) => s1 > s2);
             ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 <= s2, (int s1, int s2) => s1 <= s2);

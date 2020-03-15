@@ -5,6 +5,7 @@ namespace Streamx.Linq.SQL.Grammar {
     public sealed class ContextAttribute : Attribute {
         public ParameterContext Value { get; }
         public String Format { get; set; }
+        public String BlockSequenceSeparator { get; set; }
 
         public ContextAttribute(ParameterContext value) {
             Value = value;
