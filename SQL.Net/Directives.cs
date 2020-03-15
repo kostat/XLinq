@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Streamx.Linq.SQL.Grammar;
 
@@ -56,7 +57,7 @@ namespace Streamx.Linq.SQL {
         public static IAggregateGroup<T> aggregateBy<T>(T aggregateFunction) where T : IComparable {
             throw new NotSupportedException();
         }
-        
+
         [Function("", OmitParentheses = true)]
         public static IAggregateGroup<T> aggregateBy<T>(T? aggregateFunction) where T : struct, IComparable {
             throw new NotSupportedException();
@@ -68,7 +69,7 @@ namespace Streamx.Linq.SQL {
             [Context(ParameterContext.Alias)] T alias) where T : IComparable {
             throw new NotSupportedException();
         }
-        
+
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T field) where T : IComparable {
@@ -81,7 +82,7 @@ namespace Streamx.Linq.SQL {
             [Context(ParameterContext.Alias)] T? alias) where T : struct, IComparable {
             throw new NotSupportedException();
         }
-        
+
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T? field,
@@ -95,7 +96,7 @@ namespace Streamx.Linq.SQL {
             [Context(ParameterContext.Alias)] T? alias) where T : struct, IComparable {
             throw new NotSupportedException();
         }
-        
+
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T? field) where T : struct, IComparable {
@@ -103,9 +104,12 @@ namespace Streamx.Linq.SQL {
         }
 
         [CommonTableExpression(CommonTableExpressionType.Decorator)]
-        [Function("", OmitParentheses = true, ParameterContext = ParameterContext.FromWithoutAlias, ParameterContextCapabilities = new[] {
-            nameof(Capability.ALIAS_INSERT)
-        })]
+        [Function("",
+            OmitParentheses = true,
+            ParameterContext = ParameterContext.FromWithoutAlias,
+            ParameterContextCapabilities = new[] {
+                nameof(Capability.ALIAS_INSERT)
+            })]
         [Operator]
         [ViewDeclaration]
         // ReSharper disable once InconsistentNaming
@@ -115,7 +119,7 @@ namespace Streamx.Linq.SQL {
             where TTuple : struct, ITuple {
             throw new NotSupportedException();
         }
-        
+
         /**
      * Block terminator in SQL
      */
@@ -129,7 +133,7 @@ namespace Streamx.Linq.SQL {
         public static T ToTable<T>(String table, String schema = null) {
             throw new NotSupportedException();
         }
-        
+
         /**
      * Prepends an additional element to an existing {@code varargs} array. Useful for constructing varargs for
      * <a href="https://github.com/streamx-co/FluentJPA/wiki/Dynamic-Queries">Dynamic Queries</a>.
@@ -137,6 +141,26 @@ namespace Streamx.Linq.SQL {
         [Function("", OmitParentheses = true)]
         public static T[] Params<T>(T prepend, params T[] args) {
             throw new NotSupportedException();
+        }
+
+        public static T[] RowsFrom<TE, T>(this IProjection<TE, T> set, IEnumerable<TE> batch)
+            where T : struct, ITuple
+            where TE : class {
+            return RowsFrom<TE, T>(batch)(set);
+        }
+
+        [Local]
+        public static Func<IProjection<TE, T>, T[]> RowsFrom<TE, T>(IEnumerable<TE> batch)
+            where T : struct, ITuple
+            where TE : class {
+            Func<IProjection<TE, T>, T[]> result = set => new T[] { };
+
+            foreach (var item in batch) {
+                var current = result;
+                result = set => Params(set.RowFrom(item), current(set));
+            }
+
+            return result;
         }
 
         /*[CommonTableExpression(CommonTableExpressionType.Decorator)]
