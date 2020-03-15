@@ -6,8 +6,8 @@ namespace Streamx.Linq.SQL.PostgreSQL {
     /// </summary>
     public static class DataTypes {
         public static readonly DataType<DateTime> TIMESTAMP = DataTypeNames.TIMESTAMP.Create<DateTime>();
-        public static readonly DataType<DateTime> DATE_T = DataTypeNames.DATE.Create<DateTime>();
-        public static readonly DataType<TimeSpan> TIME_T = DataTypeNames.TIME.Create<TimeSpan>();
+        public static readonly DataType<DateTime> DATE = DataTypeNames.DATE.Create<DateTime>();
+        public static readonly DataType<TimeSpan> TIME = DataTypeNames.TIME.Create<TimeSpan>();
         public static readonly DataType<DateTimeOffset> TIMETZ = DataTypeNames.TIME_WITH_TIME_ZONE.Create<DateTimeOffset>();
         public static readonly DataType<TimeSpan> INTERVAL = DataTypeNames.INTERVAL.Create<TimeSpan>();
 

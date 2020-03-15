@@ -49,12 +49,12 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static readonly DataType<float> REAL = DataTypeNames.REAL.Create<float>();
 
         // Date and time
-        public static readonly DataType<DateTime> DATE_T = DataTypeNames.DATE.Create<DateTime>();
+        public static readonly DataType<DateTime> DATE = DataTypeNames.DATE.Create<DateTime>();
         public static readonly DataType<DateTimeOffset> DATETIMEOFFSET = DataTypeNames.DATETIMEOFFSET.Create<DateTimeOffset>();
         public static readonly DataType<DateTime> DATETIME2 = DataTypeNames.DATETIME2.Create<DateTime>();
         public static readonly DataType<DateTime> SMALLDATETIME = DataTypeNames.SMALLDATETIME.Create<DateTime>();
         public static readonly DataType<DateTime> DATETIME = DataTypeNames.DATETIME.Create<DateTime>();
-        public static readonly DataType<TimeSpan> TIME_T = DataTypeNames.TIME.Create<TimeSpan>();
+        public static readonly DataType<TimeSpan> TIME = DataTypeNames.TIME.Create<TimeSpan>();
 
         // Character strings
         public static readonly DataType<String> CHAR = DataTypeNames.CHAR.Create<String>();
