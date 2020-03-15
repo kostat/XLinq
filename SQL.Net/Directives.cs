@@ -125,8 +125,17 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
-        [TableDeclaration]
+        [TableDeclaration, Tuple]
         public static T ToTable<T>(String table, String schema = null) {
+            throw new NotSupportedException();
+        }
+        
+        /**
+     * Prepends an additional element to an existing {@code varargs} array. Useful for constructing varargs for
+     * <a href="https://github.com/streamx-co/FluentJPA/wiki/Dynamic-Queries">Dynamic Queries</a>.
+     */
+        [Function("", OmitParentheses = true)]
+        public static T[] Params<T>(T prepend, params T[] args) {
             throw new NotSupportedException();
         }
 
