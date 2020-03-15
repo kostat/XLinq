@@ -8,7 +8,7 @@ namespace Streamx.Linq.SQL {
         where TTuple : struct, ITuple {
         
         [Function(""), ViewDeclarationAttribute.From]
-        IColumnsClause<TTuple> ColumnNames();
+        IColumnsClause<T, TTuple> ColumnNames();
 
         [Function(""), ViewDeclarationAttribute.Row]
         TTuple Row(TTuple tuple);

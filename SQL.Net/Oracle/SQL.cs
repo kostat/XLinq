@@ -1305,7 +1305,7 @@ namespace Streamx.Linq.SQL.Oracle {
         }
         
         [Function("INSERT", OmitParentheses = true, OmitArgumentsDelimiter = true)]
-        public static IClause MERGE_INSERT<T>(IColumnsClause<T> columns,
+        public static IClause MERGE_INSERT<TE, T>(IColumnsClause<TE, T> columns,
             T values) {
             throw new NotSupportedException();
         }

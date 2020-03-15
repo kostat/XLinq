@@ -22,6 +22,11 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static ITopClause TOP(long expression) {
             throw new NotSupportedException();
         }
+        
+        [Function(OmitParentheses = true)]
+        public static IInsertClause INSERT(IWithTiesClause top) {
+            throw new NotSupportedException();
+        }
 
         // String
 
@@ -564,7 +569,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
      * INSERT}
      */
         [Function("INSERT", OmitParentheses = true, OmitArgumentsDelimiter = true)]
-        public static IClause MERGE_INSERT<T>(IColumnsClause<T> columns,
+        public static IClause MERGE_INSERT<TE, T>(IColumnsClause<TE, T> columns,
             T values) {
             throw new NotSupportedException();
         }
