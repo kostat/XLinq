@@ -26,7 +26,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 if (node.Method.IsNotation())
                     return base.VisitMethodCall(node);
 
-                var e = ExpressionTree.Parse(node.Object, node.Method);
+                var e = ExpressionTree.Parse(node.Object, node.Method, node.Arguments);
                 ExLINQ.PrintExpression(e);
                 return Visit(Expression.Invoke(e, node.Arguments));
             }

@@ -23,9 +23,9 @@ namespace Streamx.Linq.ExTree {
             return (Expression<TDelegate>) Parse(typeof(TDelegate), targetExpression, method);
         }
 
-        public static LambdaExpression Parse(Type delegateType, Expression targetExpression, MethodInfo method) {
+        public static LambdaExpression Parse(Type delegateType, Expression targetExpression, MethodInfo method, IList<Expression> arguments = null) {
             var parameters = method.GetParameters().Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToList();
-            var visitor = new MethodVisitor(targetExpression, parameters, method.ReturnType);
+            var visitor = new MethodVisitor(targetExpression, parameters, method.ReturnType, arguments);
 
             Visit(visitor, method);
 
@@ -33,7 +33,7 @@ namespace Streamx.Linq.ExTree {
             return Expression.Lambda(delegateType, body, parameters);
         }
 
-        public static LambdaExpression Parse(Expression targetExpression, MethodInfo method) {
+        public static LambdaExpression Parse(Expression targetExpression, MethodInfo method, IList<Expression> arguments = null) {
             var @params = method.GetParameters();
             var arraySize = @params.Length;
             var returnType = method.ReturnType;
@@ -53,7 +53,7 @@ namespace Streamx.Linq.ExTree {
                 delegateType = Expression.GetFuncType(typeArgs);
             }
 
-            return Parse(delegateType, targetExpression, method);
+            return Parse(delegateType, targetExpression, method, arguments);
         }
 
         private static bool Jump(MethodVisitor visitor, ILOpCode opCode, int offset) =>

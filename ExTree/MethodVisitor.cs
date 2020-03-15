@@ -20,18 +20,21 @@ namespace Streamx.Linq.ExTree {
             new Dictionary<Label, List<ExpressionStack>>();
 
         private readonly Expression _target;
-        private readonly List<ParameterExpression> _params;
+        private readonly IList<ParameterExpression> _params;
+        private readonly IList<Expression> _arguments;
         private readonly Type _returnType;
 
         // ReSharper disable once PossibleNullReferenceException
         private static readonly int HAS_VALUE = typeof(Nullable<>).GetProperty("HasValue").GetMethod.MetadataToken;
+
         // ReSharper disable once PossibleNullReferenceException
         private static readonly int ARRAY_EMPTY = typeof(Array).GetMethod("Empty").MetadataToken;
 
-        public MethodVisitor(Expression target, List<ParameterExpression> @params, Type returnType) {
+        public MethodVisitor(Expression target, IList<ParameterExpression> @params, Type returnType, IList<Expression> arguments) {
             _target = target;
             _params = @params;
             _returnType = returnType;
+            _arguments = arguments ?? Array.Empty<Expression>();
         }
 
         public ReadOnlyCollection<Expression> Statements => _statements.AsReadOnly();
@@ -725,7 +728,7 @@ namespace Streamx.Linq.ExTree {
 
                         Delegate compiled;
                         try {
-                            compiled = Expression.Lambda(instance).Compile();
+                            compiled = Expression.Lambda(new VariableResolver(_params, _arguments).Visit(instance)).Compile();
                         }
                         catch (InvalidOperationException ioe) {
                             // cannot compile
