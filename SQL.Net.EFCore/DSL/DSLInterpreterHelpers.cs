@@ -302,12 +302,44 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             }
 
             private IList<Delegate> compiled() {
-                if (_compiled == null) {
-                    var param = (ParameterExpression)arguments[0];
-                    _compiled = arguments.Skip(1).Select(_ => Expression.Lambda(_, param).Compile()).ToList();
+
+                if (_compiled != null)
+                    return _compiled;
+                
+                var me = arguments[0];
+                var args = arguments.Skip(1);
+                if (!(me is ParameterExpression param)) {
+                    param = Expression.Parameter(me.Type);
+                    args = args.Select(_ => new VariableInstaller(me, param).Visit(_));
+                }
+                
+                return _compiled = args.Select(_ => Expression.Lambda(_, param).Compile()).ToList();
+            }
+        }
+        
+        sealed class VariableInstaller : ExpressionVisitor {
+            private readonly Expression target;
+            private readonly ParameterExpression parameter;
+            public VariableInstaller(Expression target, ParameterExpression parameter) {
+                this.target = target;
+                this.parameter = parameter;
+            }
+
+            public override Expression Visit(Expression node) {
+                return Equals(node, target) ? parameter : base.Visit(node);
+            }
+
+            private static bool Equals(Expression node, Expression target) {
+                if (node.NodeType != target.NodeType)
+                    return false;
+
+                switch (node) {
+                    case MemberExpression me:
+                        var tme = (MemberExpression) target;
+                        return me.Member == tme.Member && Equals(me.Expression, tme.Expression);
                 }
 
-                return _compiled;
+                return node == target;
             }
         }
 
