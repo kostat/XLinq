@@ -27,6 +27,11 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static IInsertClause INSERT(IWithTiesClause top) {
             throw new NotSupportedException();
         }
+        
+        [Function(OmitParentheses = true)]
+        public static IDeleteClause DELETE(IWithTiesClause top) {
+            throw new NotSupportedException();
+        }
 
         // String
 
