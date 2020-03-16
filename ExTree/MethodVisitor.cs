@@ -34,7 +34,8 @@ namespace Streamx.Linq.ExTree {
             _target = target;
             _params = @params;
             _returnType = returnType;
-            _arguments = arguments ?? Array.Empty<Expression>();
+
+            _arguments = arguments?.Count > 0 ? arguments.Select(_ => _.HasParameters() ? null : _).ToList() : null;
         }
 
         public ReadOnlyCollection<Expression> Statements => _statements.AsReadOnly();
@@ -728,7 +729,7 @@ namespace Streamx.Linq.ExTree {
 
                         Delegate compiled;
                         try {
-                            compiled = Expression.Lambda(new VariableResolver(_params, _arguments).Visit(instance)).Compile();
+                            compiled = Expression.Lambda(instance).Compile();
                         }
                         catch (InvalidOperationException ioe) {
                             // cannot compile
@@ -847,7 +848,7 @@ namespace Streamx.Linq.ExTree {
                         var--;
                     }
 
-                    _exprStack.Push(_params[var]);
+                    _exprStack.Push(_arguments?[var] ?? _params[var]);
                     return;
 
                 default:

@@ -20,6 +20,12 @@ namespace Streamx.Linq.ExTree {
             visitor.Visit(e);
             return visitor.HasCalls;
         }
+        
+        public static bool HasParameters(this Expression e) {
+            var visitor = new HasParametersChecker();
+            visitor.Visit(e);
+            return visitor.HasParameters;
+        }
 
         public static bool IsConstBoolLike(this Expression e, out bool value) {
             if (e is ConstantExpression eConst) {
@@ -242,7 +248,7 @@ namespace Streamx.Linq.ExTree {
             public bool HasCalls { get; private set; }
 
             protected override Expression VisitMethodCall(MethodCallExpression node) {
-                HasCalls = HasCalls || !node.Method.IsSpecialName;
+                HasCalls = !node.Method.IsSpecialName;
                 return HasCalls ? node : base.VisitMethodCall(node);
             }
 
@@ -257,6 +263,23 @@ namespace Streamx.Linq.ExTree {
 
             protected override Expression VisitLambda<T>(Expression<T> node) {
                 return node;
+            }
+
+            public override Expression Visit(Expression node) {
+                return HasCalls ? node : base.Visit(node);
+            }
+        }
+        
+        sealed class HasParametersChecker : ExpressionVisitor {
+            public bool HasParameters { get; private set; }
+
+            protected override Expression VisitParameter(ParameterExpression node) {
+                HasParameters = true;
+                return base.VisitParameter(node);
+            }
+
+            public override Expression Visit(Expression node) {
+                return HasParameters ? node : base.Visit(node);
             }
         }
     }
