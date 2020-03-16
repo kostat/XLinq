@@ -528,6 +528,11 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static MergeClause MERGE() {
             throw new NotSupportedException();
         }
+        
+        [Function(OmitParentheses = true)]
+        public static MergeClause MERGE(IWithTiesClause top) {
+            throw new NotSupportedException();
+        }
 
         [Function(OmitParentheses = true)]
         public static IMatchThen WHEN_MATCHED() {
