@@ -119,6 +119,21 @@ namespace Streamx.Linq.SQL {
             where TTuple : struct, ITuple {
             throw new NotSupportedException();
         }
+        
+        [CommonTableExpression(CommonTableExpressionType.Decorator)]
+        [Function("",
+            OmitParentheses = true,
+            ParameterContext = ParameterContext.FromWithoutAlias,
+            ParameterContextCapabilities = new[] {
+                nameof(Capability.ALIAS_INSERT)
+            })]
+        [Operator]
+        [ViewDeclaration]
+        // ReSharper disable once InconsistentNaming
+        public static IProjection<T> @using<T>(this T tableReference)
+            where T : class {
+            throw new NotSupportedException();
+        }
 
         /**
      * Block terminator in SQL
