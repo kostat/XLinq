@@ -56,7 +56,23 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             if (right is MethodCallExpression method1 && method1.Method.IsSpecialName)
                 return FindAssociation(method1, false);
 
+            var entityType = FindEntityType(left.Type);
+            var pkey = entityType?.FindPrimaryKey();
+            if (pkey != null) {
+                var keys = pkey.Properties.Select(p => p.GetColumnName().AsSequence()).ToList();
+                return new Association(keys, keys, false);
+            }
+
             throw TranslationError.UNEXPECTED_ASSOCIATION.getError(left, right);
+        }
+
+        private IEntityType FindEntityType(Type type) {
+            var entityType = model.FindEntityType(type);
+            if (entityType != null)
+                return entityType;
+
+            var baseType = type.BaseType;
+            return baseType == null ? null : FindEntityType(baseType);
         }
 
         private Association FindAssociation(MethodCallExpression method, bool leftOwner) {
