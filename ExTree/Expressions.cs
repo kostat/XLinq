@@ -18,13 +18,13 @@ namespace Streamx.Linq.ExTree {
         public static bool HasCalls(this Expression e) {
             var visitor = new HasCallsChecker();
             visitor.Visit(e);
-            return visitor.HasCalls;
+            return visitor.Value;
         }
-        
+
         public static bool HasParameters(this Expression e) {
             var visitor = new HasParametersChecker();
             visitor.Visit(e);
-            return visitor.HasParameters;
+            return visitor.Value;
         }
 
         public static bool IsConstBoolLike(this Expression e, out bool value) {
@@ -244,16 +244,16 @@ namespace Streamx.Linq.ExTree {
             return Expression.Condition(test, ifTrue, ifFalse);
         }
 
-        sealed class HasCallsChecker : ExpressionVisitor {
-            public bool HasCalls { get; private set; }
+        class HasCallsChecker : ExpressionVisitor {
+            public bool Value { get; protected set; }
 
             protected override Expression VisitMethodCall(MethodCallExpression node) {
-                HasCalls = !node.Method.IsSpecialName;
-                return HasCalls ? node : base.VisitMethodCall(node);
+                Value = !node.Method.IsSpecialName;
+                return Value ? node : base.VisitMethodCall(node);
             }
 
             protected override Expression VisitInvocation(InvocationExpression node) {
-                HasCalls = true;
+                Value = true;
                 return node;
             }
 
@@ -266,20 +266,14 @@ namespace Streamx.Linq.ExTree {
             }
 
             public override Expression Visit(Expression node) {
-                return HasCalls ? node : base.Visit(node);
+                return Value ? node : base.Visit(node);
             }
         }
-        
-        sealed class HasParametersChecker : ExpressionVisitor {
-            public bool HasParameters { get; private set; }
 
+        sealed class HasParametersChecker : HasCallsChecker {
             protected override Expression VisitParameter(ParameterExpression node) {
-                HasParameters = true;
-                return base.VisitParameter(node);
-            }
-
-            public override Expression Visit(Expression node) {
-                return HasParameters ? node : base.Visit(node);
+                Value = true;
+                return node;
             }
         }
     }
