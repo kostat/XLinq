@@ -15,7 +15,7 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
-        [Function]
+        [Function(UnderscoresAsBlanks = false)]
         public static String CONCAT_WS(String separator,
             params IComparable[] expressions) {
             throw new NotSupportedException();

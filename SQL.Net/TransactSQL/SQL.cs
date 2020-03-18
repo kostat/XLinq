@@ -159,14 +159,19 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int YEAR(DateTime date) {
             throw new NotSupportedException();
         }
+        
+        [Function]
+        public static int YEAR(DateTime? date) {
+            throw new NotSupportedException();
+        }
 
         [Function]
         public static int YEAR(DateTimeOffset date) {
             throw new NotSupportedException();
         }
-
+        
         [Function]
-        public static int YEAR(String date) {
+        public static int YEAR(DateTimeOffset? date) {
             throw new NotSupportedException();
         }
 
@@ -174,14 +179,19 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int MONTH(DateTime date) {
             throw new NotSupportedException();
         }
+        
+        [Function]
+        public static int MONTH(DateTime? date) {
+            throw new NotSupportedException();
+        }
 
         [Function]
         public static int MONTH(DateTimeOffset date) {
             throw new NotSupportedException();
         }
-
+        
         [Function]
-        public static int MONTH(String date) {
+        public static int MONTH(DateTimeOffset? date) {
             throw new NotSupportedException();
         }
 
@@ -189,14 +199,19 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int DAY(DateTime date) {
             throw new NotSupportedException();
         }
+        
+        [Function]
+        public static int DAY(DateTime? date) {
+            throw new NotSupportedException();
+        }
 
         [Function]
         public static int DAY(DateTimeOffset date) {
             throw new NotSupportedException();
         }
-
+        
         [Function]
-        public static int DAY(String date) {
+        public static int DAY(DateTimeOffset? date) {
             throw new NotSupportedException();
         }
 
@@ -385,6 +400,16 @@ namespace Streamx.Linq.SQL.TransactSQL {
         [Function]
         public static String HASHBYTES([Literal] HashingAlgorithm hashingAlgorithm,
             Object expression) {
+            throw new NotSupportedException();
+        }
+        
+        [Function]
+        public static int ISNULL<T>(T checkExpression , T replacementValue) {
+            throw new NotSupportedException();
+        }
+        
+        [Function]
+        public static int ISNUMERIC(IComparable expression) {
             throw new NotSupportedException();
         }
 

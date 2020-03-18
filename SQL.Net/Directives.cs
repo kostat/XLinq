@@ -54,12 +54,12 @@ namespace Streamx.Linq.SQL {
      * Starts Window Function (OVER clause)
      */
         [Function("", OmitParentheses = true)]
-        public static IAggregateGroup<T> aggregateBy<T>(T aggregateFunction) where T : IComparable {
+        public static IAggregateGroup<T> AggregateBy<T>(T aggregateFunction) where T : IComparable {
             throw new NotSupportedException();
         }
 
         [Function("", OmitParentheses = true)]
-        public static IAggregateGroup<T> aggregateBy<T>(T? aggregateFunction) where T : struct, IComparable {
+        public static IAggregateGroup<T> AggregateBy<T>(T? aggregateFunction) where T : struct, IComparable {
             throw new NotSupportedException();
         }
 

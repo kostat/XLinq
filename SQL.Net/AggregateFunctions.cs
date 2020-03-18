@@ -94,7 +94,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function(UnderscoresAsBlanks = false)]
-        public static int CUME_DIST() {
+        public static double CUME_DIST() {
             throw new NotSupportedException();
         }
 
