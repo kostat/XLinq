@@ -81,6 +81,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
         private Association FindAssociation(Type target, MethodInfo methodBase, bool leftOwner) {
             var navigation = FindProperty(target, methodBase, (e, mi) => e.FindNavigation(mi));
+            if (navigation == null)
+                return null;
             var foreignKey = navigation.ForeignKey;
             var foreignKeyProperties = foreignKey.Properties.Select(p => p.GetColumnName().AsSequence()).ToList();
             var principalKeyProperties = foreignKey.PrincipalKey.Properties.Select(p => p.GetColumnName().AsSequence()).ToList();
