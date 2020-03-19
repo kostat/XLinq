@@ -11,7 +11,7 @@ using Streamx.Linq.SQL.Grammar.Configuration;
 
 namespace Streamx.Linq.SQL.EFCore {
     // ReSharper disable once InconsistentNaming
-    public static class ExLINQ {
+    public static class XLinq {
         private static readonly PropertyInfo DEBUG_VIEW =
 #if DEBUG
             typeof(Expression).GetProperty("DebugView",

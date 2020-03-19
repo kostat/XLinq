@@ -17,7 +17,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 return Expression.Constant(result, node.Type);
             }
 
-            if (ExLINQ.GetSubstitition(node.Method, out var subst)) {
+            if (XLinq.GetSubstitition(node.Method, out var subst)) {
                 var replaced = new Replacer(node.Object != null ? Visit(node.Object) : null, Visit(node.Arguments), subst.Parameters).Visit(subst.Expression);
                 return Replacer.Convert(Visit(replaced), node.Type);
             }
@@ -27,7 +27,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     return base.VisitMethodCall(node);
 
                 var e = ExpressionTree.Parse(node.Object, node.Method, node.Arguments);
-                ExLINQ.PrintExpression(e);
+                XLinq.PrintExpression(e);
                 return Visit(Expression.Invoke(e, node.Arguments));
             }
 

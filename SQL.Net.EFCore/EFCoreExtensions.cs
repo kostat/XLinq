@@ -16,33 +16,33 @@ namespace Streamx.Linq.SQL.EFCore {
     // ReSharper disable once InconsistentNaming
     public static class EFCoreExtensions {
         static EFCoreExtensions() {
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => Equals(s1, s2), (object s1, object s2) => s1 == s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => Equals(s1, s2), (object s1, object s2) => s1 == s2);
 
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 + s2, (int s1, int s2) => s1 + s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 - s2, (int s1, int s2) => s1 - s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 * s2, (int s1, int s2) => s1 * s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 / s2, (int s1, int s2) => s1 / s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 % s2, (int s1, int s2) => s1 % s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 & s2, (int s1, int s2) => s1 & s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 | s2, (int s1, int s2) => s1 | s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 ^ s2, (int s1, int s2) => s1 ^ s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, int s2) => s1 << s2, (int s1, int s2) => s1 << s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, int s2) => s1 >> s2, (int s1, int s2) => s1 >> s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 == s2, (float s1, float s2) => (int)s1 == (int)s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 != s2, (float s1, float s2) => (int)s1 != (int)s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 < s2, (int s1, int s2) => s1 < s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 > s2, (int s1, int s2) => s1 > s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 <= s2, (int s1, int s2) => s1 <= s2);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 >= s2, (int s1, int s2) => s1 >= s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 + s2, (int s1, int s2) => s1 + s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 - s2, (int s1, int s2) => s1 - s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 * s2, (int s1, int s2) => s1 * s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 / s2, (int s1, int s2) => s1 / s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 % s2, (int s1, int s2) => s1 % s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 & s2, (int s1, int s2) => s1 & s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 | s2, (int s1, int s2) => s1 | s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 ^ s2, (int s1, int s2) => s1 ^ s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, int s2) => s1 << s2, (int s1, int s2) => s1 << s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, int s2) => s1 >> s2, (int s1, int s2) => s1 >> s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 == s2, (float s1, float s2) => (int)s1 == (int)s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 != s2, (float s1, float s2) => (int)s1 != (int)s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 < s2, (int s1, int s2) => s1 < s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 > s2, (int s1, int s2) => s1 > s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 <= s2, (int s1, int s2) => s1 <= s2);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => s1 >= s2, (int s1, int s2) => s1 >= s2);
 
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => +s1, (int s1) => +s1);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => -s1, (int s1) => -s1);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => !s1, (bool s1) => !s1);
-            ExLINQ.Configuration.RegisterMethodSubstitution((Point s1) => ~s1, (int s1) => ~s1);
-            ExLINQ.Configuration.RegisterMethodSubstitution((int s1) => (Point) s1, (int s1) => s1);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1) => +s1, (int s1) => +s1);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1) => -s1, (int s1) => -s1);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1) => !s1, (bool s1) => !s1);
+            XLinq.Configuration.RegisterMethodSubstitution((Point s1) => ~s1, (int s1) => ~s1);
+            XLinq.Configuration.RegisterMethodSubstitution((int s1) => (Point) s1, (int s1) => s1);
             // ReSharper disable once PossibleInvalidOperationException
-            ExLINQ.Configuration.RegisterMethodSubstitution((int? s1) => s1.Value, (int s1) => s1);
-            ExLINQ.Configuration.RegisterMethodSubstitution((int? s1) => s1.GetValueOrDefault(), (int s1) => s1);
+            XLinq.Configuration.RegisterMethodSubstitution((int? s1) => s1.Value, (int s1) => s1);
+            XLinq.Configuration.RegisterMethodSubstitution((int? s1) => s1.GetValueOrDefault(), (int s1) => s1);
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local
@@ -166,7 +166,7 @@ namespace Streamx.Linq.SQL.EFCore {
             where TDelegate : MulticastDelegate {
             var parsed = (Expression) ExpressionTree.Parse(query);
 
-            ExLINQ.PrintExpression(parsed);
+            XLinq.PrintExpression(parsed);
 
             var norm = new Normalizer();
             parsed = norm.Visit(parsed);
