@@ -89,7 +89,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function(UnderscoresAsBlanks = false)]
-        public static long PERCENT_RANK() {
+        public static double PERCENT_RANK() {
             throw new NotSupportedException();
         }
 
@@ -99,7 +99,7 @@ namespace Streamx.Linq.SQL {
         }
 
         [Function]
-        public static int NTILE(int numBuckets) {
+        public static long NTILE(int numBuckets) {
             throw new NotSupportedException();
         }
 

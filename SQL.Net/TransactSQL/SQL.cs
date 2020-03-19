@@ -71,13 +71,13 @@ namespace Streamx.Linq.SQL.TransactSQL {
         }
 
         [Function]
-        public static String FORMAT(String expression,
+        public static String FORMAT(IComparable expression,
             String format) {
             throw new NotSupportedException();
         }
 
         [Function]
-        public static String FORMAT(String expression,
+        public static String FORMAT(IComparable expression,
             String format,
             String culture) {
             throw new NotSupportedException();
