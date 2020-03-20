@@ -242,9 +242,9 @@ namespace Streamx.Linq.SQL {
 
     public interface IFetch {
         [Function(OmitParentheses = true)]
-        IClause ROWS_ONLY { get; }
+        IClause ROWS_ONLY();
 
         [Function(OmitParentheses = true)]
-        IClause ROWS_WITH_TIES { get; }
+        IClause ROWS_WITH_TIES();
     }
 }
