@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Streamx.Linq.SQL.Grammar;
 using Streamx.Linq.SQL.Grammar.Configuration;
 
 namespace Streamx.Linq.SQL.TransactSQL {
+    // ReSharper disable once InconsistentNaming
     public static class SQL {
         // Clauses
 
@@ -22,12 +22,12 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static ITopClause TOP(long expression) {
             throw new NotSupportedException();
         }
-        
+
         [Function(OmitParentheses = true)]
         public static IInsertClause INSERT(IWithTiesClause top) {
             throw new NotSupportedException();
         }
-        
+
         [Function(OmitParentheses = true)]
         public static IDeleteClause DELETE(IWithTiesClause top) {
             throw new NotSupportedException();
@@ -159,7 +159,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int YEAR(DateTime date) {
             throw new NotSupportedException();
         }
-        
+
         [Function]
         public static int YEAR(DateTime? date) {
             throw new NotSupportedException();
@@ -169,7 +169,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int YEAR(DateTimeOffset date) {
             throw new NotSupportedException();
         }
-        
+
         [Function]
         public static int YEAR(DateTimeOffset? date) {
             throw new NotSupportedException();
@@ -179,7 +179,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int MONTH(DateTime date) {
             throw new NotSupportedException();
         }
-        
+
         [Function]
         public static int MONTH(DateTime? date) {
             throw new NotSupportedException();
@@ -189,7 +189,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int MONTH(DateTimeOffset date) {
             throw new NotSupportedException();
         }
-        
+
         [Function]
         public static int MONTH(DateTimeOffset? date) {
             throw new NotSupportedException();
@@ -199,7 +199,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int DAY(DateTime date) {
             throw new NotSupportedException();
         }
-        
+
         [Function]
         public static int DAY(DateTime? date) {
             throw new NotSupportedException();
@@ -209,7 +209,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static int DAY(DateTimeOffset date) {
             throw new NotSupportedException();
         }
-        
+
         [Function]
         public static int DAY(DateTimeOffset? date) {
             throw new NotSupportedException();
@@ -265,6 +265,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         }
 
         [Function]
+        // ReSharper disable once InconsistentNaming
         public static DateTime DATETIME2FROMPARTS(int year,
             int month,
             int day,
@@ -295,8 +296,8 @@ namespace Streamx.Linq.SQL.TransactSQL {
             int minute,
             int seconds,
             int fractions,
-            int hour_offset,
-            int minute_offset,
+            int hourOffset,
+            int minuteOffset,
             int precision) {
             throw new NotSupportedException();
         }
@@ -402,12 +403,12 @@ namespace Streamx.Linq.SQL.TransactSQL {
             Object expression) {
             throw new NotSupportedException();
         }
-        
+
         [Function]
-        public static int ISNULL<T>(T checkExpression , T replacementValue) {
+        public static int ISNULL<T>(T checkExpression, T replacementValue) {
             throw new NotSupportedException();
         }
-        
+
         [Function]
         public static int ISNUMERIC(IComparable expression) {
             throw new NotSupportedException();
@@ -553,7 +554,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         public static MergeClause MERGE() {
             throw new NotSupportedException();
         }
-        
+
         [Function(OmitParentheses = true)]
         public static MergeClause MERGE(IWithTiesClause top) {
             throw new NotSupportedException();
@@ -590,7 +591,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
         }
 
         /**
-     * Used in {@link SQL#MERGE()} only<br>
+     * Used in {@link SQL#MERGE()} only
      * Name changed to avoid clashing
      */
         [Function("UPDATE", OmitParentheses = true)]
@@ -632,6 +633,8 @@ namespace Streamx.Linq.SQL.TransactSQL {
             config.Capabilities = new HashSet<Capability>(new[] {Capability.TABLE_AS_ALIAS});
 
             config.RegisterMethodSubstitution((String s) => s.Length, (String s) => SQL.LEN(s));
+            config.RegisterMethodSubstitution((String s, int start, int length) => s.Substring(start, length),
+                (String s, int start, int length) => SQL.SUBSTRING(s, start, length));
             config.RegisterMethodSubstitution((DateTime dt) => dt.Month, (DateTime dt) => SQL.MONTH(dt));
             config.RegisterMethodSubstitution((DateTime dt) => dt.Year, (DateTime dt) => SQL.YEAR(dt));
             config.RegisterMethodSubstitution((DateTime dt) => dt.Day, (DateTime dt) => SQL.DAY(dt));
