@@ -76,7 +76,7 @@ namespace Streamx.Linq.SQL.EFCore {
 
         /// <summary>
         ///     <para>
-        ///         Creates a LINQ query based XLINQ query.
+        ///         Creates a LINQ query based on XLINQ query.
         ///     </para>
         ///     <para>
         ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
@@ -89,7 +89,7 @@ namespace Streamx.Linq.SQL.EFCore {
 
         /// <summary>
         ///     <para>
-        ///         Creates a LINQ query based XLINQ query.
+        ///         Creates a LINQ query based on XLINQ query.
         ///     </para>
         ///     <para>
         ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
@@ -103,7 +103,7 @@ namespace Streamx.Linq.SQL.EFCore {
 
         /// <summary>
         ///     <para>
-        ///         Creates a LINQ query based XLINQ query.
+        ///         Creates a LINQ query based on XLINQ query.
         ///     </para>
         ///     <para>
         ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
@@ -118,7 +118,7 @@ namespace Streamx.Linq.SQL.EFCore {
 
         /// <summary>
         ///     <para>
-        ///         Creates a LINQ query based XLINQ query.
+        ///         Creates a LINQ query based on XLINQ query.
         ///     </para>
         ///     <para>
         ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
@@ -135,7 +135,7 @@ namespace Streamx.Linq.SQL.EFCore {
 
         /// <summary>
         ///     <para>
-        ///         Creates a LINQ query based XLINQ query.
+        ///         Creates a LINQ query based on XLINQ query.
         ///     </para>
         ///     <para>
         ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
