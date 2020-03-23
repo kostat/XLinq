@@ -3,13 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Streamx.Linq.SQL.EFCore</RootNamespace>
+    <PackageTags>XLINQ;LINQ;SQL;Entity;Framework;Core;entity-framework-core;EF;Data;O/RM;EntityFramework;EntityFrameworkCore;EFCore</PackageTags>
   </PropertyGroup>
 
   <Import Project="../Commons.csproj" />
 
   <PropertyGroup>
     <PackageId>Streamx.Linq.SQL.EFCore</PackageId>
-    <Description>Streamx Linq to SQL for EF Core</Description>
+    <Description>Streamx Linq to SQL for EF Core. It allows you to use C# (or your .NET language of choice) to write strongly typed queries.
+      
+Interactive tutorial available at http://xlinq.live.
+    </Description>
+    <Title>XLinq for EF Core</Title>
   </PropertyGroup>
 
   <ItemGroup>

@@ -342,10 +342,7 @@ namespace Streamx.Linq.SQL.Oracle {
             int from) {
             throw new NotSupportedException();
         }
-
-        /**
-     * Creates a TREAT expression, e.g. {@code TREAT(<expression> AS employee_t)}
-     */
+        
         [Function(ArgumentsDelimiter = " AS")]
         public static T TREAT<T, TypeName>(Object expression,
             TypeName dataType) where T : IComparable<T> where TypeName : DataType<T> {
@@ -1284,20 +1281,17 @@ namespace Streamx.Linq.SQL.Oracle {
             throw new NotSupportedException();
         }
 
-        /**
-     * Used in {@link SQL#MERGE()} only<br>
-     * Name changed to avoid clashing
-     */
+        /// <summary>
+        /// Name changed to avoid clashing with <see cref="Linq.SQL.SQL.UPDATE{T}"/>
+        /// </summary>
         [Function("UPDATE", OmitParentheses = true)]
         public static IUpdateSet MERGE_UPDATE() {
             throw new NotSupportedException();
         }
 
-        /**
-     * Used in {@link SQL#MERGE()} only<br>
-     * Name changed to avoid clashing with {@link co.streamx.fluent.SQL.SQL#INSERT(co.streamx.fluent.SQL.Keyword...)
-     * INSERT}
-     */
+        /// <summary>
+        /// Name changed to avoid clashing with <see cref="Linq.SQL.SQL.INSERT"/>
+        /// </summary>
         [Function("INSERT", OmitParentheses = true, OmitArgumentsDelimiter = true)]
         public static IClause MERGE_INSERT<T>(T columns,
             T values) {
@@ -1309,17 +1303,6 @@ namespace Streamx.Linq.SQL.Oracle {
             T values) {
             throw new NotSupportedException();
         }
-
-        /**
-     * Used in {@link SQL#MERGE()} only<br>
-     * Name changed to avoid clashing with {@link co.streamx.fluent.SQL.SQL#INSERT(co.streamx.fluent.SQL.Keyword...)
-     * INSERT}
-     */
-        /*[Function("INSERT", OmitParentheses = true, OmitArgumentsDelimiter = true)]
-        public static IClause MERGE_INSERT<T> (Record<T> columns,
-                                       T values) {
-            throw new NotSupportedException();
-        }*/
 
         // Sequence
         sealed class SequenceImpl<T> : ISequence<T> where T : IComparable<T> {

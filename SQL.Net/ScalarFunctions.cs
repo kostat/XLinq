@@ -58,51 +58,50 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
-        /**
-     * Use with {@link #TRIM(Trim)}
-     */
+        /// <summary>
+        /// Use with <see cref="TRIM(ITrim)"/> 
+        /// </summary>
         [Function(OmitParentheses = true)]
         public static ITrim BOTH(String expression) {
             throw new NotSupportedException();
         }
 
-        /**
-     * Use with {@link #TRIM(Trim)}
-     */
+        /// <summary>
+        /// Use with <see cref="TRIM(ITrim)"/> 
+        /// </summary>
         [Function(OmitParentheses = true)]
         public static ITrim LEADING() {
             throw new NotSupportedException();
         }
 
-        /**
-     * Use with {@link #TRIM(Trim)}
-     */
+        /// <summary>
+        /// Use with <see cref="TRIM(ITrim)"/> 
+        /// </summary>
         [Function(OmitParentheses = true)]
         public static ITrim LEADING(String expression) {
             throw new NotSupportedException();
         }
 
-        /**
-     * Use with {@link #TRIM(Trim)}
-     */
+        /// <summary>
+        /// Use with <see cref="TRIM(ITrim)"/> 
+        /// </summary>
         [Function(OmitParentheses = true)]
         public static ITrim TRAILING() {
             throw new NotSupportedException();
         }
 
-        /**
-     * Use with {@link #TRIM(Trim)}
-     */
+        /// <summary>
+        /// Use with <see cref="TRIM(ITrim)"/> 
+        /// </summary>
         [Function(OmitParentheses = true)]
         public static ITrim TRAILING(String expression) {
             throw new NotSupportedException();
         }
 
-        /**
-     * See {@link #BOTH(String)}, {@link #LEADING(String)}, {@link #TRAILING(String)} <br>
-     * <br>
-     * Example: {@code TRIM(TRAILING("xyz").FROM("barxxyz"))}
-     */
+        /// <summary>
+        /// Example: <code>TRIM(TRAILING("xyz").FROM("barxxyz"))</code>
+        /// <seealso cref="LEADING()"/>, <seealso cref="TRAILING()"/>, <seealso cref="BOTH"/>
+        /// </summary>
         [Function]
         public static String TRIM(ITrim trim) {
             throw new NotSupportedException();
@@ -280,10 +279,6 @@ namespace Streamx.Linq.SQL {
         }
 
         // Conversion
-
-        /**
-         * Creates a CAST expression, e.g. {@code CAST(<expression> AS DATE)}
-         */
         [Function(ArgumentsDelimiter = " AS")]
         internal static T CAST<T, TType, TExpression>(TExpression expression, TType dataType)
             where TType : DataType<T>

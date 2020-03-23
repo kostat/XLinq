@@ -7,22 +7,35 @@ using Streamx.Linq.SQL.Grammar.Configuration;
 
 namespace Streamx.Linq.SQL {
     public static class SQL {
+        
+        /// <summary>
+        /// Generates SQL <code>SELECT *</code> clause. 
+        /// </summary>
         [Function(OmitParentheses = true, ParameterContext = ParameterContext.Select)]
         public static IEntitySelectClause<T> SELECT<T>(T entity,
             params IAlias[] expressions) where T : class, new() {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Generates SQL <code>SELECT</code> clause without aliases. 
+        /// </summary>
         [Function(OmitParentheses = true)]
         public static ITupleSelectClause<T> SELECT<T>(T expression) where T : IComparable {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Generates SQL <code>SELECT</code> clause without aliases. 
+        /// </summary>
         [Function(OmitParentheses = true)]
         public static ITupleSelectClause<T?> SELECT<T>(T? expression) where T : struct, IComparable {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Generates SQL <code>SELECT</code> clause. 
+        /// </summary>
         [Function(OmitParentheses = true, ParameterContext = ParameterContext.Select)]
         public static IEntitySelectClause<T> SELECT<T>(params IAlias[] expressions)
             where T : class, new() {

@@ -5,64 +5,91 @@ using Streamx.Linq.SQL.Grammar;
 
 namespace Streamx.Linq.SQL {
     public static class Directives {
+        /// <summary>
+        /// Creates an XLINQ subquery.
+        /// </summary>
         [SubQuery]
         public static T SubQuery<T>(Func<IQueryResult<T>> query) {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Creates an XLINQ subquery.
+        /// </summary>
         [SubQuery]
         public static T SubQuery<TEntity0, T>(Func<TEntity0, IQueryResult<T>> query) {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Creates an XLINQ subquery.
+        /// </summary>
         [SubQuery]
         public static T SubQuery<TEntity0, TEntity1, T>(Func<TEntity0, TEntity1, IQueryResult<T>> query) {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Creates an XLINQ subquery.
+        /// </summary>
         [SubQuery]
         public static T SubQuery<TEntity0, TEntity1, TEntity2, T>(Func<TEntity0, TEntity1, TEntity2, IQueryResult<T>> query) {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Creates an XLINQ subquery.
+        /// </summary>
         [SubQuery]
         public static T SubQuery<TEntity0, TEntity1, TEntity2, TEntity3, T>(Func<TEntity0, TEntity1, TEntity2, TEntity3, IQueryResult<T>> query) {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Creates an XLINQ subquery.
+        /// </summary>
         [SubQuery]
         public static T SubQuery<TEntity0, TEntity1, TEntity2, TEntity3, TEntity4, T>(
             Func<TEntity0, TEntity1, TEntity2, TEntity3, TEntity4, IQueryResult<T>> query) {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Creates an XLINQ subquery.
+        /// </summary>
         [SubQuery]
         public static T SubQuery<TEntity0, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, T>(
             Func<TEntity0, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, IQueryResult<T>> query) {
             throw new NotSupportedException();
         }
 
-        /**
-     * lets specify a window frame in OVER clause
-     */
+        /// <summary>
+        /// Lets specify a window frame in OVER clause
+        /// </summary>
         [Function("", OmitParentheses = true)]
         public static IWindowFrame WindowFrame() {
             throw new NotSupportedException();
         }
 
-        /**
-     * Starts Window Function (OVER clause)
-     */
+        /// <summary>
+        /// Starts Window Function (OVER clause)
+        /// </summary>
         [Function("", OmitParentheses = true)]
         public static IAggregateGroup<T> AggregateBy<T>(T aggregateFunction) where T : IComparable {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Starts Window Function (OVER clause)
+        /// </summary>
         [Function("", OmitParentheses = true)]
         public static IAggregateGroup<T> AggregateBy<T>(T? aggregateFunction) where T : struct, IComparable {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Alias column for SELECT.
+        /// </summary>
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T field,
@@ -70,12 +97,18 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Alias column for SELECT.
+        /// </summary>
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T field) where T : IComparable {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Alias column for SELECT.
+        /// </summary>
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T field,
@@ -83,6 +116,9 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Alias column for SELECT.
+        /// </summary>
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T? field,
@@ -90,6 +126,9 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Alias column for SELECT.
+        /// </summary>
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T? field,
@@ -97,12 +136,19 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Alias column for SELECT.
+        /// </summary>
         [Alias]
         // ReSharper disable once InconsistentNaming
         public static IAlias<T> @as<T>(this T? field) where T : struct, IComparable {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Creates table projection for INSERT, UPDATE
+        /// </summary>
+        /// <param name="tuple">C# value tuple, e.g. <code>(blog.Name, blog.Author)</code></param>
         [CommonTableExpression(CommonTableExpressionType.Decorator)]
         [Function("",
             OmitParentheses = true,
@@ -119,7 +165,10 @@ namespace Streamx.Linq.SQL {
             where TTuple : struct, ITuple {
             throw new NotSupportedException();
         }
-        
+
+        /// <summary>
+        /// Creates table projection for INSERT, UPDATE
+        /// </summary>
         [CommonTableExpression(CommonTableExpressionType.Decorator)]
         [Function("",
             OmitParentheses = true,
@@ -135,35 +184,44 @@ namespace Streamx.Linq.SQL {
             throw new NotSupportedException();
         }
 
-        /**
-     * Block terminator in SQL
-     */
+        /// <summary>
+        /// Block terminator (statement separator)
+        /// </summary>
         [BlockTerminator]
         [Function(";", OmitParentheses = true)]
         public static void Semicolon() {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Give an ad-hoc SQL table name. Overrides the model configuration.
+        /// </summary>
         [TableDeclaration, Tuple]
         public static T ToTable<T>(String table, String schema = null) {
             throw new NotSupportedException();
         }
 
-        /**
-     * Prepends an additional element to an existing {@code varargs} array. Useful for constructing varargs for
-     * <a href="https://github.com/streamx-co/FluentJPA/wiki/Dynamic-Queries">Dynamic Queries</a>.
-     */
+        /// <summary>
+        /// Prepends an additional element to an existing <code>params</code> array.
+        /// Used in <seealso cref="RowsFrom{TE,T}(Streamx.Linq.SQL.IProjection{TE,T},System.Collections.Generic.IEnumerable{TE})"/>
+        /// </summary>
         [Function("", OmitParentheses = true)]
         public static T[] Params<T>(T prepend, params T[] args) {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Generate multiple records for VALUES
+        /// </summary>
         public static T[] RowsFrom<TE, T>(this IProjection<TE, T> set, IEnumerable<TE> batch)
             where T : struct, ITuple
             where TE : class {
             return RowsFrom<TE, T>(batch)(set);
         }
 
+        /// <summary>
+        /// Generate multiple records for VALUES
+        /// </summary>
         [Local]
         public static Func<IProjection<TE, T>, T[]> RowsFrom<TE, T>(IEnumerable<TE> batch)
             where T : struct, ITuple
@@ -177,39 +235,5 @@ namespace Streamx.Linq.SQL {
 
             return result;
         }
-
-        /*[CommonTableExpression(CommonTableExpressionType.Decorator)]
-        [Function("", OmitParentheses = true, ParameterContext = ParameterContext.FromWithoutAlias, ParameterContextCapabilities = new[] {
-            nameof(Capability.ALIAS_INSERT)
-        })]
-        [Operator]
-        [ViewDeclaration]
-        // ReSharper disable once InconsistentNaming
-        public static IView<ValueTuple<T1, T2>> @using<T, T1, T2>(this T tableReference,
-            [Context(ParameterContext.Alias)] T1 column1,
-            [Context(ParameterContext.Alias)] T2 column2)
-            where T : class
-            where T1 : IComparable<T1>, IComparable
-            where T2 : IComparable<T1>, IComparable {
-            throw new NotSupportedException();
-        }
-
-        [CommonTableExpression(CommonTableExpressionType.Decorator)]
-        [Function("", OmitParentheses = true, ParameterContext = ParameterContext.FromWithoutAlias, ParameterContextCapabilities = new[] {
-            nameof(Capability.ALIAS_INSERT)
-        })]
-        [Operator]
-        [ViewDeclaration]
-        // ReSharper disable once InconsistentNaming
-        public static IView<ValueTuple<T1, T2>> @using<T, T1, T2, T3>(this T tableReference,
-            [Context(ParameterContext.Alias)] T1 column1,
-            [Context(ParameterContext.Alias)] T2 column2,
-            [Context(ParameterContext.Alias)] T3 column3)
-            where T : class
-            where T1 : IComparable<T1>, IComparable
-            where T2 : IComparable<T1>, IComparable
-            where T3 : IComparable<T1>, IComparable {
-            throw new NotSupportedException();
-        }*/
     }
 }

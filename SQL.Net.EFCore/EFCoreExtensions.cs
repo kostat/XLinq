@@ -74,21 +74,57 @@ namespace Streamx.Linq.SQL.EFCore {
             public static bool operator >=(Point a, Point b) => throw new NotImplementedException();
         }
 
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
         public static IQueryable<TEntity> Query<TEntity>(this DbSet<TEntity> source, Func<IQueryResult<TEntity>> query)
             where TEntity : class =>
             Query0(source, query);
 
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
         public static IQueryable<TEntity> Query<TEntity, TEntity1>(this DbSet<TEntity> source, Func<TEntity1, IQueryResult<TEntity>> query)
             where TEntity : class
             where TEntity1 : class =>
             Query0(source, query);
 
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
         public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2>(this DbSet<TEntity> source, Func<TEntity1, TEntity2, IQueryResult<TEntity>> query)
             where TEntity : class
             where TEntity1 : class
             where TEntity2 : class =>
             Query0(source, query);
 
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
         public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2, TEntity3>(this DbSet<TEntity> source,
             Func<TEntity1, TEntity2, TEntity3, IQueryResult<TEntity>> query)
             where TEntity : class
@@ -97,6 +133,15 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity3 : class =>
             Query0(source, query);
 
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
         public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DbSet<TEntity> source,
             Func<TEntity1, TEntity2, TEntity3, TEntity4, IQueryResult<TEntity>> query)
             where TEntity : class
@@ -112,24 +157,39 @@ namespace Streamx.Linq.SQL.EFCore {
             return source.FromSqlRaw(qsql, @params);
         }
 
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
         public static int Query(this DatabaseFacade source, Action query) =>
             Query0(source, query);
 
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
         public static int Query<TEntity>(this DatabaseFacade source, Action<TEntity> query)
             where TEntity : class =>
             Query0(source, query);
 
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
         public static int Query<TEntity, TEntity1>(this DatabaseFacade source, Action<TEntity, TEntity1> query)
             where TEntity : class
             where TEntity1 : class =>
             Query0(source, query);
 
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
         public static int Query<TEntity, TEntity1, TEntity2>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2> query)
             where TEntity : class
             where TEntity1 : class
             where TEntity2 : class =>
             Query0(source, query);
 
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
         public static int Query<TEntity, TEntity1, TEntity2, TEntity3>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2, TEntity3> query)
             where TEntity : class
             where TEntity1 : class
@@ -137,6 +197,9 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity3 : class =>
             Query0(source, query);
 
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
         public static int Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DatabaseFacade source,
             Action<TEntity, TEntity1, TEntity2, TEntity3, TEntity4> query)
             where TEntity : class
@@ -146,6 +209,9 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity4 : class =>
             Query0(source, query);
 
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
         public static int Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DatabaseFacade source,
             Action<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5> query)
             where TEntity : class

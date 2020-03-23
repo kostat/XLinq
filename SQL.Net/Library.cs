@@ -53,16 +53,16 @@ namespace Streamx.Linq.SQL {
             return AggregateFunctions.COUNT(ASTERISK);
         }
 
-        /**
-     * A shortcut for<br>
-     * 
-     * <pre>
-     * {@code SELECT(<tableRef>);
-     * FROM(<tableRef>);}
-     * </pre>
-     *
-     * which translates to {@code SELECT tableRef.* FROM tableRef}
-     */
+
+        /// <summary>
+        /// <para>
+        /// A shortcut for
+        /// </para>
+        /// <code>
+        /// SELECT(&lt;tableRef&gt;);
+        /// FROM(&lt;tableRef&gt;);
+        /// </code>
+        /// </summary>
         public static IEntitySelectClause<T> SelectAll<T>(T tableRef) where T : class, new() {
             var r = SELECT(tableRef);
             FROM(tableRef);
