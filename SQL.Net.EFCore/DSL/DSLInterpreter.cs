@@ -331,10 +331,14 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     return () => new PackedInitializers(Collections.emptyList<Expression>(), Collections.emptyList<Func<ISequence<char>>>(),
                         Collections.emptyList<ISequence<char>>(), this);
 
-                // if (!(value is IKeyword) && (collectingParameters ?? false))
-                //     return () => registerParameter(value);
+                var type = value.GetType();
+                var typeCode = Type.GetTypeCode(type);
+                var canConst = typeCode == TypeCode.String || typeCode >= TypeCode.Char && typeCode <= TypeCode.Double;
 
-                return () => new DynamicConstant(value, this);
+                return canConst || type.IsEnum || value is IKeyword ||
+                       type.IsDefined(typeof(ToStringFormatterAttribute)) || type.IsDefined(typeof(LiteralAttribute)) ? 
+                    (Func<ISequence<char>>)(() => new DynamicConstant(value, this)) : 
+                    () => registerParameter(value);
             };
         }
 

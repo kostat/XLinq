@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Streamx.Linq.SQL.Grammar;
 
 namespace Streamx.Linq.SQL {
-    public abstract class Enum {
+    public abstract class Enum : IKeyword {
         public override string ToString() => FieldMap[this];
 
         protected static IDictionary<object, string> ComputeFieldMap(Type type) =>

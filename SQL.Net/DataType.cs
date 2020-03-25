@@ -2,7 +2,7 @@ using System;
 using Streamx.Linq.SQL.Grammar;
 
 namespace Streamx.Linq.SQL {
-    public abstract class DataType<T> {
+    public abstract class DataType<T> : IKeyword {
         [Function("", OmitArgumentsDelimiter = true, OmitParentheses = true)]
         public T Of(String constant) {
             throw new NotSupportedException();
