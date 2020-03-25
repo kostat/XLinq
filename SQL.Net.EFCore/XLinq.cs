@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using Streamx.Linq.ExTree;
 using Streamx.Linq.SQL.EFCore.DSL;
 using Streamx.Linq.SQL.Grammar;
@@ -38,7 +39,7 @@ namespace Streamx.Linq.SQL.EFCore {
                 Name = method.Name;
                 DeclaringType = method.DeclaringType;
                 ParameterCount = method.GetParameters().Length;
-                Attributes = method.Attributes;
+                Attributes = method.Attributes & ~(MethodAttributes.Abstract | MethodAttributes.Final);
                 ConsiderParameterTypes = considerParameterTypes;
                 Parameters = considerParameterTypes ? method.GetParameters() : null;
             }
@@ -51,7 +52,9 @@ namespace Streamx.Linq.SQL.EFCore {
             private ParameterInfo[] Parameters { get; }
 
             public bool Equals(SubstitutionKey other) {
-                var simple = Name == other.Name && Attributes == other.Attributes && ParameterCount == other.ParameterCount &&
+                var simple = Name == other.Name &&
+                             Attributes == other.Attributes &&
+                             ParameterCount == other.ParameterCount &&
                              (!ConsiderParameterTypes || !other.ConsiderParameterTypes || Equals(Parameters, other.Parameters));
 
                 if (!simple)
@@ -68,7 +71,24 @@ namespace Streamx.Linq.SQL.EFCore {
                 // ReSharper disable once PossibleNullReferenceException
                 var otherDeclaring = other.DeclaringType.IsGenericType ? other.DeclaringType.GetGenericTypeDefinition() : other.DeclaringType;
 
-                return declaring == otherDeclaring || declaring.IsSubclassOf(otherDeclaring) || otherDeclaring.IsSubclassOf(declaring);
+                if (declaring == otherDeclaring || declaring.IsSubclassOf(otherDeclaring) || otherDeclaring.IsSubclassOf(declaring))
+                    return true;
+
+                if (declaring.IsClass == otherDeclaring.IsClass)
+                    return false;
+
+                return otherDeclaring.IsClass ? ContainsInterface(otherDeclaring, declaring) : ContainsInterface(declaring, otherDeclaring);
+            }
+
+            private static bool ContainsInterface(Type @class, Type iface) {
+                var ifaces = @class.GetInterfaces();
+
+                foreach (var i in ifaces) {
+                    if (i.MetadataToken == iface.MetadataToken && i.Module == iface.Module)
+                        return true;
+                }
+
+                return false;
             }
 
             public override bool Equals(object obj) {
@@ -78,7 +98,7 @@ namespace Streamx.Linq.SQL.EFCore {
             public override int GetHashCode() {
                 return HashCode.Combine(Name, ParameterCount, (int) Attributes);
             }
-            
+
             public override string ToString() {
                 return $"{DeclaringType}.{Name}";
             }
