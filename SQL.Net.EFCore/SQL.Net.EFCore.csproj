@@ -27,4 +27,14 @@ Interactive tutorial available at http://xlinq.live.
     <ProjectReference Include="..\SQLGrammar\SQLGrammar.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="obfuscar.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="RunObfuscar" BeforeTargets="pack">
+    <CallTarget Targets="Obfuscar" />
+  </Target>
+
 </Project>

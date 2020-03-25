@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Obfuscator>
+  <Var name="OutPath" value="obfuscated" />
+  <Var name="KeepPublicApi" value="true" />
+  <Var name="HidePrivateApi" value="true" />
+
+  <Module file="ExTree.dll" />
+</Obfuscator>
