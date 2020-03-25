@@ -333,7 +333,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
                 var type = value.GetType();
                 var typeCode = Type.GetTypeCode(type);
-                var canConst = typeCode == TypeCode.String || typeCode >= TypeCode.Char && typeCode <= TypeCode.Double;
+                var canConst = typeCode >= TypeCode.Char;
 
                 return canConst || type.IsEnum || value is IKeyword ||
                        type.IsDefined(typeof(ToStringFormatterAttribute)) || type.IsDefined(typeof(LiteralAttribute)) ? 

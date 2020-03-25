@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -42,6 +43,9 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                         }
 
                         _string = @out.Append(SINGLE_QUOTE_CHAR).AsSequence();
+                    }
+                    else if (value is decimal d) {
+                        _string = Convert.ToString(decimal.ToDouble(d), CultureInfo.InvariantCulture).AsSequence();
                     }
                     else {
                         var toString = Convert.ToString(value);
