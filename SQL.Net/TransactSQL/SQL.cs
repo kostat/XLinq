@@ -643,6 +643,7 @@ namespace Streamx.Linq.SQL.TransactSQL {
             config.RegisterMethodSubstitution((DateTimeOffset dt) => dt.Year, (DateTimeOffset dt) => SQL.YEAR(dt));
             config.RegisterMethodSubstitution((DateTimeOffset dt) => dt.Day, (DateTimeOffset dt) => SQL.DAY(dt));
             config.RegisterGenericCapabilities();
+            config.RegisterIdentifierQuoter(s => $"[{s}]");
         }
     }
 }

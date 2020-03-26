@@ -24,5 +24,7 @@ namespace Streamx.Linq.SQL.Grammar.Configuration {
         void RegisterMethodSubstitution<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult1, TResult2>(Func<T1, T2, T5, T7, T9, TResult1> from,
             Func<T3, T4, T6, T8, T10, TResult2> to,
             bool considerParameterTypes = false);
+
+        void RegisterIdentifierQuoter(Func<String, String> quoter);
     }
 }

@@ -59,7 +59,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             var entityType = FindEntityType(left.Type);
             var pkey = entityType?.FindPrimaryKey();
             if (pkey != null) {
-                var keys = pkey.Properties.Select(p => p.GetColumnName().AsSequence()).ToList();
+                var keys = pkey.Properties.Select(p => Quoter(p.GetColumnName()).AsSequence()).ToList();
                 return new Association(keys, keys, false);
             }
 
@@ -84,8 +84,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             if (navigation == null)
                 return null;
             var foreignKey = navigation.ForeignKey;
-            var foreignKeyProperties = foreignKey.Properties.Select(p => p.GetColumnName().AsSequence()).ToList();
-            var principalKeyProperties = foreignKey.PrincipalKey.Properties.Select(p => p.GetColumnName().AsSequence()).ToList();
+            var foreignKeyProperties = foreignKey.Properties.Select(p => Quoter(p.GetColumnName()).AsSequence()).ToList();
+            var principalKeyProperties = foreignKey.PrincipalKey.Properties.Select(p => Quoter(p.GetColumnName()).AsSequence()).ToList();
 
             return new Association(foreignKeyProperties, principalKeyProperties, leftOwner);
         }
@@ -104,18 +104,17 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     var assoc = FindAssociation(target, methodBase, true);
                     if (assoc == null)
                         throw TranslationError.UNMAPPED_FIELD.getError(methodBase);
-                    return new IdentifierPath.MultiColumnIdentifierPath(methodBase.Name, 
-                        _ => assoc, null);
+                    return new IdentifierPath.MultiColumnIdentifierPath(Quoter(methodBase.Name), _ => assoc, null);
                 }
                 
                 var prop = FindProperty(target, methodBase, (e, mi) => e.FindProperty(mi));
                 if (prop == null && !IsEntity(target) && !target.IsDefined(typeof(TupleAttribute)))
                     throw TranslationError.UNMAPPED_FIELD.getError(methodBase);
                 var columnName = prop == null ? RemoveSpecialPrefix(methodBase.Name) : prop.GetColumnName();
-                return new IdentifierPath.Resolved(columnName.AsSequence(), methodBase.DeclaringType, methodBase.Name, null);
+                return new IdentifierPath.Resolved(Quoter(columnName).AsSequence(), methodBase.DeclaringType, methodBase.Name, null);
             }
 
-            return new IdentifierPath.Resolved(methodBase.Name.AsSequence(), methodBase.DeclaringType, methodBase.Name, null);
+            return new IdentifierPath.Resolved(Quoter(methodBase.Name).AsSequence(), methodBase.DeclaringType, methodBase.Name, null);
         }
 
         private bool IsEntity(Type target) {
@@ -152,8 +151,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             var entityType = model.FindRuntimeEntityType(entity);
             // TODO: throw if null
             var schema = entityType.GetSchema();
-            var tableName = entityType.GetTableName();
-            return schema != null ? schema + DOT + tableName : tableName;
+            var tableName = Quoter(entityType.GetTableName());
+            return schema != null ? Quoter(schema) + DOT + tableName : tableName;
         }
     }
 }

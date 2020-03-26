@@ -204,11 +204,11 @@ namespace Streamx.Linq.SQL {
 
         [CommonTableExpression(CommonTableExpressionType.Decorator)]
         [Function(OmitParentheses = true)]
-        public static T RECURSIVE<T>(T CTE) {
+        public static T RECURSIVE<T>(T cte) {
             throw new NotSupportedException();
         }
 
-        internal static void RegisterGenericCapabilities(this IConfiguration config) {
+        public static void RegisterGenericCapabilities(this IConfiguration config) {
 
 
             config.RegisterMethodSubstitution((ICollection<int> c, int item) => c.Contains(item), (ICollection<int> c, int i) => Operators.IN(i, c));

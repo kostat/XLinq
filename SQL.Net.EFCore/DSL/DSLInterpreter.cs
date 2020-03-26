@@ -11,6 +11,7 @@ using Streamx.Linq.SQL.Grammar;
 
 namespace Streamx.Linq.SQL.EFCore.DSL {
     partial class DSLInterpreter : ExpressionVisitor {
+        private Func<string, string> Quoter { get; }
         private const string DTYPE = "DTYPE";
 
         private const char UNDERSCORE_CHAR = '_';
@@ -86,7 +87,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         private readonly IModel model;
         private string blockSequenceSeparator;
 
-        public DSLInterpreter(IModel model) {
+        public DSLInterpreter(IModel model, Func<String, String> quoter) {
+            Quoter = quoter;
             this.model = model;
         }
 

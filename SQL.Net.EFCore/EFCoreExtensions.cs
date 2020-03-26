@@ -1,19 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Streamx.Linq.ExTree;
 using Streamx.Linq.SQL.EFCore.DSL;
 using Streamx.Linq.SQL.Grammar;
-
-[assembly: InternalsVisibleTo("SQL.Net.EFCore.Tests")]
+// ReSharper disable UnusedParameter.Local
 
 namespace Streamx.Linq.SQL.EFCore {
     // ReSharper disable once InconsistentNaming
+    /// <summary>
+    /// XLinq extensions methods
+    /// </summary>
     public static class EFCoreExtensions {
         static EFCoreExtensions() {
             XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => Equals(s1, s2), (object s1, object s2) => s1 == s2);
@@ -228,7 +228,10 @@ namespace Streamx.Linq.SQL.EFCore {
             return db.ExecuteSqlRaw(qsql, @params);
         }
 
-        internal static string GetQuerySQL<TDelegate>(IInfrastructure<IServiceProvider> source, TDelegate query, out object[] @params)
+        /// <summary>
+        /// Parses query and returns generated SQL and captured parameters
+        /// </summary>
+        public static string GetQuerySQL<TDelegate>(IInfrastructure<IServiceProvider> source, TDelegate query, out object[] @params)
             where TDelegate : MulticastDelegate {
             var parsed = (Expression) ExpressionTree.Parse(query);
 
@@ -237,7 +240,7 @@ namespace Streamx.Linq.SQL.EFCore {
             var norm = new Normalizer();
             parsed = norm.Visit(parsed);
 
-            var dsl = new DSLInterpreter(source.GetService<IModel>());
+            var dsl = new DSLInterpreter(source.GetService<IModel>(), XLinq.Quoter);
             var fvisited = dsl.Visit(parsed).As<Func<Func<ISequence<char>>>>();
             var visited = fvisited();
             var qsql = visited().ToString();

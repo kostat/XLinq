@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 using Streamx.Linq.ExTree;
 using Streamx.Linq.SQL.EFCore.DSL;
 using Streamx.Linq.SQL.Grammar;
@@ -12,6 +11,9 @@ using Streamx.Linq.SQL.Grammar.Configuration;
 
 namespace Streamx.Linq.SQL.EFCore {
     // ReSharper disable once InconsistentNaming
+    /// <summary>
+    /// XLinq globals
+    /// </summary>
     public static class XLinq {
         private static readonly PropertyInfo DEBUG_VIEW =
 #if DEBUG
@@ -20,6 +22,9 @@ namespace Streamx.Linq.SQL.EFCore {
 #else
             null;
 #endif
+        /// <summary>
+        /// Access XLinq global configuration 
+        /// </summary>
         public static IConfiguration Configuration { get; } = new Configuration();
 
         internal static ISet<Capability> Capabilities { get; set; } = Collections.emptySet<Capability>();
@@ -105,6 +110,7 @@ namespace Streamx.Linq.SQL.EFCore {
         }
 
         private static readonly IDictionary<SubstitutionKey, Substitution> SUBSTITUTIONS = new ConcurrentDictionary<SubstitutionKey, Substitution>();
+        internal static Func<String, String> Quoter { get; private set; } = s => s;
 
         internal static void RegisterMethodSubstitution<T1, T2, TResult1, TResult2>(Func<T1, TResult1> from,
             Func<T2, TResult2> to,
@@ -165,5 +171,8 @@ namespace Streamx.Linq.SQL.EFCore {
         internal static void PrintExpression(Expression parsed) {
             Console.WriteLine($"Parsed: {DEBUG_VIEW.GetValue(parsed)}");
         }
+
+        internal static void RegisterIdentifierQuoter(Func<string, string> quoter) => 
+            Quoter = quoter ?? (s => s);
     }
 }

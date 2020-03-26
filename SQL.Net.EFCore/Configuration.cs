@@ -33,5 +33,7 @@ namespace Streamx.Linq.SQL.EFCore {
             Func<T3, T4, T6, T8, T10, TResult2> to,
             bool considerParameterTypes = false) =>
             XLinq.RegisterMethodSubstitution(@from, to, considerParameterTypes);
+
+        public void RegisterIdentifierQuoter(Func<string, string> quoter) => XLinq.RegisterIdentifierQuoter(quoter);
     }
 }

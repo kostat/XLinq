@@ -578,6 +578,7 @@ namespace Streamx.Linq.SQL.MySQL {
             config.RegisterMethodSubstitution((DateTimeOffset dt) => dt.TimeOfDay, (DateTimeOffset dt) => SQL.TIME(dt));
             config.RegisterMethodSubstitution((DateTimeOffset dt) => dt.DayOfYear, (DateTimeOffset dt) => SQL.DAYOFYEAR(dt));
             config.RegisterGenericCapabilities();
+            config.RegisterIdentifierQuoter(s => $"`{s}`");
         }
     }
 }

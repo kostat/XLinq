@@ -1387,6 +1387,7 @@ namespace Streamx.Linq.SQL.Oracle {
 
             config.RegisterMethodSubstitution((String s) => s.Length, (String s) => SQL.LENGTH(s));
             config.RegisterGenericCapabilities();
+            config.RegisterIdentifierQuoter(s => $"\"{s}\"");
         }
     }
 }
