@@ -15,6 +15,13 @@ namespace Streamx.Linq.SQL.EFCore {
     /// XLinq globals
     /// </summary>
     public static class XLinq {
+
+        static XLinq() {
+            var ver = Environment.Version;
+            if (ver.Major > 4)
+                throw new PlatformNotSupportedException();
+        }
+        
         private static readonly PropertyInfo DEBUG_VIEW =
 #if DEBUG
             typeof(Expression).GetProperty("DebugView",

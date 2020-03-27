@@ -1,12 +1,12 @@
 <Project>
 	<!-- https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets -->
     <PropertyGroup>
-        <VersionPrefix>1.0.0</VersionPrefix>
-	<VersionSuffix>preview.3</VersionSuffix>
+        <VersionPrefix>3.1.0</VersionPrefix>
+	<VersionSuffix>4</VersionSuffix>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Company>Streamx LLC</Company>
         <Authors>Konstantin Triger</Authors>
-        <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+        <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
         <Copyright>© Streamx LLC. All rights reserved.</Copyright>
 	<SourceRevisionId>date$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mmZ"))</SourceRevisionId>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
