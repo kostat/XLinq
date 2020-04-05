@@ -33,47 +33,48 @@ namespace Streamx.Linq.SQL.EFCore {
 
             var payload = GetPayload(key, fingerprint);
 
-            using var client = new HttpClient {BaseAddress = new Uri("https://api.cryptlex.com/v3/")};
-            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+            using (var client = new HttpClient {BaseAddress = new Uri("https://api.cryptlex.com/v3/")}) {
+                var content = new StringContent(payload, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response;
-            try {
-                var service = key != null ? "activations" : "trial-activations";
-                response = await client.PostAsync(service, content);
-            }
-            catch (HttpRequestException) {
-                return;
-            }
-
-            var result = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode) {
-                var field = key != null ? "activationToken" : "trialActivationToken";
-
-                var match = Regex.Match(result, getPattern(field));
-                var token = getMatch(match);
-
-                if (!ValidateToken(token, fingerprint))
-                    return; // Hmmm
-
+                HttpResponseMessage response;
                 try {
-                    var tempFile = Path.GetTempFileName();
-                    await File.WriteAllTextAsync(tempFile, token);
-                    File.Copy(tempFile, tokenFile, true);
-                    File.Delete(tempFile);
+                    var service = key != null ? "activations" : "trial-activations";
+                    response = await client.PostAsync(service, content);
                 }
-                catch (IOException) {
-                    // ignore
+                catch (HttpRequestException) {
+                    return;
                 }
-            }
-            else {
-                var match = Regex.Match(result, getPattern("message"));
-                var message = getMatch(match);
 
-                match = Regex.Match(result, getPattern("code"));
-                var code = getMatch(match);
+                var result = await response.Content.ReadAsStringAsync();
 
-                throw new SecurityTokenValidationException($"Error loading XLinq: {message} Reason: {code}");
+                if (response.IsSuccessStatusCode) {
+                    var field = key != null ? "activationToken" : "trialActivationToken";
+
+                    var match = Regex.Match(result, getPattern(field));
+                    var token = getMatch(match);
+
+                    if (!ValidateToken(token, fingerprint))
+                        return; // Hmmm
+
+                    try {
+                        var tempFile = Path.GetTempFileName();
+                        await File.WriteAllTextAsync(tempFile, token);
+                        File.Copy(tempFile, tokenFile, true);
+                        File.Delete(tempFile);
+                    }
+                    catch (IOException) {
+                        // ignore
+                    }
+                }
+                else {
+                    var match = Regex.Match(result, getPattern("message"));
+                    var message = getMatch(match);
+
+                    match = Regex.Match(result, getPattern("code"));
+                    var code = getMatch(match);
+
+                    throw new SecurityTokenValidationException($"Error loading XLinq: {message} Reason: {code}");
+                }
             }
 
             string getPattern(string field) => "\"" + field + "\"\\s*:\\s*\"([^\\\"]+)\"";
