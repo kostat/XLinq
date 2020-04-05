@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Streamx.Linq.SQL.EFCore</RootNamespace>
     <PackageTags>XLINQ;LINQ;SQL;Entity;Framework;Core;entity-framework-core;EF;Data;O/RM;EntityFramework;EntityFrameworkCore;EFCore</PackageTags>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <Import Project="../Commons.csproj" />
@@ -20,6 +21,8 @@ Interactive tutorial available at http://xlinq.live.
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

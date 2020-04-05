@@ -14,7 +14,7 @@ namespace Streamx.Linq.SQL.EFCore {
     /// <summary>
     /// XLinq extensions methods
     /// </summary>
-    public static class EFCoreExtensions {
+    public static partial class EFCoreExtensions {
         static EFCoreExtensions() {
             XLinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => Equals(s1, s2), (object s1, object s2) => s1 == s2);
 
@@ -233,6 +233,9 @@ namespace Streamx.Linq.SQL.EFCore {
         /// </summary>
         public static string GetQuerySQL<TDelegate>(IInfrastructure<IServiceProvider> source, TDelegate query, out object[] @params)
             where TDelegate : MulticastDelegate {
+
+            XLinq.EnsureLicense();
+            
             var parsed = (Expression) ExpressionTree.Parse(query);
 
             XLinq.PrintExpression(parsed);

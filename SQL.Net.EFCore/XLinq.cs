@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Streamx.Linq.ExTree;
 using Streamx.Linq.SQL.EFCore.DSL;
 using Streamx.Linq.SQL.Grammar;
@@ -14,14 +16,8 @@ namespace Streamx.Linq.SQL.EFCore {
     /// <summary>
     /// XLinq globals
     /// </summary>
-    public static class XLinq {
+    public static partial class XLinq {
 
-        static XLinq() {
-            var ver = Environment.Version;
-            if (ver.Major > 4)
-                throw new PlatformNotSupportedException();
-        }
-        
         private static readonly PropertyInfo DEBUG_VIEW =
 #if DEBUG
             typeof(Expression).GetProperty("DebugView",
@@ -29,6 +25,51 @@ namespace Streamx.Linq.SQL.EFCore {
 #else
             null;
 #endif
+        private static volatile int licenseChecked;
+        private static volatile Exception licenseException;
+        private static volatile String licenseKey = null;
+
+        /// <summary>
+        /// Activate product license to enable debugging
+        /// </summary>
+        public static async Task ActivateLicense(String license) {
+
+            if (license != null && !Equals(license, licenseKey))
+                licenseKey = license;
+            
+            if (!Debugger.IsAttached)
+                return;
+
+            try {
+                await Validate(license);
+                licenseException = null;
+                licenseKey = license;
+                ReportLicenseOk();
+            }
+            catch (Exception e){
+                licenseException = e;
+                ReportNoLicense();
+                throw;
+            }
+            finally {
+                Interlocked.Exchange(ref licenseChecked, 1);
+            }
+        }
+
+        internal static void EnsureLicense() {
+            if (licenseChecked == 0 && Debugger.IsAttached) {
+                var r = Interlocked.CompareExchange(ref licenseChecked, 1, 0);
+                if (r == 0)
+#pragma warning disable 4014
+                    ActivateLicense(licenseKey);
+#pragma warning restore 4014
+            }
+
+            var e = licenseException;
+            if (e != null)
+                throw e;
+        }
+        
         /// <summary>
         /// Access XLinq global configuration 
         /// </summary>
