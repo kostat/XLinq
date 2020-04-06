@@ -242,7 +242,7 @@ namespace Streamx.Linq.SQL.EFCore {
 
             if (fingerprint.Length < 64) {
                 var filler = new char[64 - fingerprint.Length];
-                Array.Fill(filler, '=');
+                filler.Fill('=');
                 fingerprint += new String(filler);
             }
 
