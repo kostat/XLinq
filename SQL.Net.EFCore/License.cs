@@ -19,11 +19,15 @@ namespace Streamx.Linq.SQL.EFCore {
         private static async Task Validate(String key) {
 
             var tempDir = Path.GetTempPath();
-            var tokenFile = Path.Join(tempDir, "streamx.session");
+            var tokenFile = Path.Combine(tempDir, "streamx.session");
             var fingerprint = GetFingerprint();
 
             try {
+#if NETFRAMEWORK
+                var existingToken = File.ReadAllText(tokenFile);
+#else
                 var existingToken = await File.ReadAllTextAsync(tokenFile);
+#endif
                 if (ValidateToken(existingToken, fingerprint))
                     return;
             }
@@ -58,7 +62,11 @@ namespace Streamx.Linq.SQL.EFCore {
 
                     try {
                         var tempFile = Path.GetTempFileName();
+#if NETFRAMEWORK
+                        File.WriteAllText(tempFile, token);
+#else
                         await File.WriteAllTextAsync(tempFile, token);
+#endif
                         File.Copy(tempFile, tokenFile, true);
                         File.Delete(tempFile);
                     }
@@ -84,7 +92,8 @@ namespace Streamx.Linq.SQL.EFCore {
         private static bool ValidateToken(String token,
             String fingerprint) {
             var rsa = RSA.Create();
-            rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(PEM).AsSpan(), out _);
+            // rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(PEM).AsSpan(), out _);
+            rsa.FromXmlString(PEM_XML);
 
             var param = new TokenValidationParameters {
                 RequireExpirationTime = false,
@@ -106,12 +115,15 @@ namespace Streamx.Linq.SQL.EFCore {
             return !expired;
         }
 
-        private const String PEM = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAteuLzI/1WNVjJYZ2GjvB"
-                                   + "s7PZSfaWaFHSzYC2I7tdK37RaKmF4C7Vy31gZbwrsOvs3PuBgXsCeJVRcX76staN"
-                                   + "1yqA0DvOjS+GX44LTc/YR+Z83g4ZGmY7i08k9D8crVDIh5BtHoPGRi60Pzm7F/GS"
-                                   + "Dj9tPRpgYIajK3gjk+L5x9oq87AkiMPFOf1nxTTUho/w8qM083+7l6aAZUowixDn"
-                                   + "j2bvrKj63+LofUt2/dNNsLKuWajk+Y+FxAxIIS0y3j1kAW1+6YupDBRzqHH/SC5y"
-                                   + "WGx2vsWVOewWhQhkLXFvjtMax1mvo0mZwiTAv4QvY6gLAlO5xARRyyZl/zePgj+A" + "PQIDAQAB";
+        // private const String PEM = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAteuLzI/1WNVjJYZ2GjvB"
+        //                            + "s7PZSfaWaFHSzYC2I7tdK37RaKmF4C7Vy31gZbwrsOvs3PuBgXsCeJVRcX76staN"
+        //                            + "1yqA0DvOjS+GX44LTc/YR+Z83g4ZGmY7i08k9D8crVDIh5BtHoPGRi60Pzm7F/GS"
+        //                            + "Dj9tPRpgYIajK3gjk+L5x9oq87AkiMPFOf1nxTTUho/w8qM083+7l6aAZUowixDn"
+        //                            + "j2bvrKj63+LofUt2/dNNsLKuWajk+Y+FxAxIIS0y3j1kAW1+6YupDBRzqHH/SC5y"
+        //                            + "WGx2vsWVOewWhQhkLXFvjtMax1mvo0mZwiTAv4QvY6gLAlO5xARRyyZl/zePgj+A" + "PQIDAQAB";
+        
+        private const String PEM_XML =
+            "<RSAKeyValue><Modulus>teuLzI/1WNVjJYZ2GjvBs7PZSfaWaFHSzYC2I7tdK37RaKmF4C7Vy31gZbwrsOvs3PuBgXsCeJVRcX76staN1yqA0DvOjS+GX44LTc/YR+Z83g4ZGmY7i08k9D8crVDIh5BtHoPGRi60Pzm7F/GSDj9tPRpgYIajK3gjk+L5x9oq87AkiMPFOf1nxTTUho/w8qM083+7l6aAZUowixDnj2bvrKj63+LofUt2/dNNsLKuWajk+Y+FxAxIIS0y3j1kAW1+6YupDBRzqHH/SC5yWGx2vsWVOewWhQhkLXFvjtMax1mvo0mZwiTAv4QvY6gLAlO5xARRyyZl/zePgj+APQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
         private static bool IsSiteLocalAddress(Span<byte> ip) {
             switch (ip[0]) {
@@ -207,7 +219,14 @@ namespace Streamx.Linq.SQL.EFCore {
                     if (a.AddressFamily != AddressFamily.InterNetwork)
                         continue;
 
-                    if (!a.TryWriteBytes(ipBytes, out var written) || written != 4 || !IsSiteLocalAddress(ipBytes))
+#if NETFRAMEWORK
+                    ipBytes = a.GetAddressBytes();
+#else
+                    if (!a.TryWriteBytes(ipBytes, out var written) || written != 4)
+                        continue;
+#endif
+                    
+                    if (!IsSiteLocalAddress(ipBytes))
                         continue;
 
                     addresses.Add(BytesToHex(addressBytes));
@@ -269,7 +288,7 @@ namespace Streamx.Linq.SQL.EFCore {
             var max = message.Split('\n').Max(s => s.Length);
 
             var dashes = new char[max];
-            Array.Fill(dashes, '#');
+            dashes.Fill('#');
             Console.WriteLine(dashes);
             Console.WriteLine();
             Console.WriteLine(message);
