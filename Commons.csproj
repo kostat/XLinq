@@ -1,21 +1,18 @@
 <Project>
-	<!-- https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets -->
-    <PropertyGroup>
-        <VersionPrefix>3.1.4</VersionPrefix>
-	<VersionSuffix></VersionSuffix>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Company>Streamx LLC</Company>
-        <Authors>Konstantin Triger</Authors>
-        <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
-        <Copyright>© Streamx LLC. All rights reserved.</Copyright>
-	<SourceRevisionId>date$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mmZ"))</SourceRevisionId>
-	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<PackageProjectUrl>http://xlinq.live</PackageProjectUrl>
-    </PropertyGroup>
 
     <Target Name="Obfuscar">
-        <Exec Command="~/.dotnet/tools/obfuscar.console obfuscar.xml" WorkingDirectory="$(OutputPath)"/>
+        <Exec Command="$(SolutionDir).tools/obfuscar.console obfuscar.xml" WorkingDirectory="$(OutputPath)"/>
         <Copy SourceFiles="$(OutputPath)/obfuscated/$(AssemblyName).dll" DestinationFolder="$(OutputPath)" />
     </Target>
+
+    <Target Name="RunObfuscar" BeforeTargets="pack">
+        <CallTarget Targets="Obfuscar" />
+    </Target>
+
+    <ItemGroup>
+        <None Update="obfuscar.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>

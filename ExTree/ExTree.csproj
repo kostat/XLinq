@@ -5,26 +5,12 @@
     <RootNamespace>Streamx.Linq.ExTree</RootNamespace>
   </PropertyGroup>
 
+  <Import Project="../../XLinq.SQL/Commons.csproj" />
   <Import Project="../Commons.csproj" />
 
   <PropertyGroup>
     <PackageId>Streamx.Linq.ExTree</PackageId>
     <Description>Converts MSIL to AST</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Update="obfuscar.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <!--<Target Name="Obfuscar" BeforeTargets="pack">
-    <Exec Command="~/.dotnet/tools/obfuscar.console obfuscar.xml" WorkingDirectory="$(OutputPath)"/>
-    <Copy SourceFiles="$(OutputPath)/obfuscated/$(AssemblyName).dll" DestinationFolder="$(OutputPath)" />
-  </Target>-->
-
-  <Target Name="RunObfuscar" BeforeTargets="pack">
-    <CallTarget Targets="Obfuscar" />
-  </Target>
 
 </Project>

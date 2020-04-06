@@ -7,6 +7,7 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
+  <Import Project="../../XLinq.SQL/Commons.csproj" />
   <Import Project="../Commons.csproj" />
 
   <PropertyGroup>
@@ -27,17 +28,7 @@ Interactive tutorial available at http://xlinq.live.
 
   <ItemGroup>
     <ProjectReference Include="..\ExTree\ExTree.csproj" />
-    <ProjectReference Include="..\SQLGrammar\SQLGrammar.csproj" />
+    <ProjectReference Include="..\..\XLinq.SQL\SQLGrammar\SQLGrammar.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="obfuscar.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <Target Name="RunObfuscar" BeforeTargets="pack">
-    <CallTarget Targets="Obfuscar" />
-  </Target>
 
 </Project>

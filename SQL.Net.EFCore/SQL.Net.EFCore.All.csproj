@@ -5,6 +5,7 @@
     <RootNamespace>Streamx.Linq.SQL.EFCore</RootNamespace>
   </PropertyGroup>
 
+  <Import Project="../../XLinq.SQL/Commons.csproj" />
   <Import Project="../Commons.csproj" />
 
   <PropertyGroup>
@@ -22,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExTree\ExTree.csproj" />
-    <ProjectReference Include="..\SQLGrammar\SQLGrammar.csproj" />
+    <ProjectReference Include="..\..\XLinq.SQL\SQLGrammar\SQLGrammar.csproj" />
   </ItemGroup>
 
 </Project>
