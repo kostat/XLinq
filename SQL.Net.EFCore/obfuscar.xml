@@ -4,5 +4,5 @@
   <Var name="KeepPublicApi" value="true" />
   <Var name="HidePrivateApi" value="true" />
 
-  <Module file="SQL.Net.EFCore.dll" />
+  <Module file="Streamx.Linq.SQL.EFCore.dll" />
 </Obfuscator>

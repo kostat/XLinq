@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>Streamx.Linq.SQL.EFCore</RootNamespace>
-    <PackageTags>XLINQ;LINQ;SQL;Entity;Framework;Core;entity-framework-core;EF;Data;O/RM;EntityFramework;EntityFrameworkCore;EFCore</PackageTags>
+    <AssemblyName>Streamx.Linq.SQL.EFCore</AssemblyName>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
