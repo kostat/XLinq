@@ -1,10 +1,5 @@
 <Project>
 
-    <Target Name="Obfuscar">
-        <Exec Command="$(SolutionDir).tools/obfuscar.console obfuscar.xml" WorkingDirectory="$(FullOutputPath)"/>
-        <Copy SourceFiles="$(FullOutputPath)/obfuscated/$(AssemblyName).dll" DestinationFolder="$(FullOutputPath)" />
-    </Target>
-
     <Target Name="RunObfuscar" BeforeTargets="pack">
         <CallTarget Targets="Obfuscar" />
     </Target>
