@@ -1,7 +1,12 @@
 <Project>
 
-    <Target Name="RunObfuscar" BeforeTargets="pack">
+    <Target Name="PostBuildScript" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
         <CallTarget Targets="Obfuscar" />
+    </Target>
+
+    <Target Name="Obfuscar">
+        <Exec Command="$(SolutionDir).tools/obfuscar.console obfuscar.xml" WorkingDirectory="$(OutputPath)" />
+        <Copy SourceFiles="$(OutputPath)/obfuscated/$(AssemblyName).dll" DestinationFolder="$(OutputPath)" />
     </Target>
 
     <ItemGroup>

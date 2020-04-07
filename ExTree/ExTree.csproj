@@ -15,9 +15,4 @@
     <Description>Converts MSIL to AST</Description>
   </PropertyGroup>
 
-  <Target Name="Obfuscar">
-    <Exec Command="$(SolutionDir).tools/obfuscar.console obfuscar.xml" WorkingDirectory="$(OutputPath)"/>
-    <Copy SourceFiles="$(OutputPath)/obfuscated/$(AssemblyName).dll" DestinationFolder="$(OutputPath)" />
-  </Target>
-
 </Project>
