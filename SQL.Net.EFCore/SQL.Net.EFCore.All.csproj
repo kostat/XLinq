@@ -6,7 +6,6 @@
     <PackageTags>XLINQ;LINQ;SQL;Entity;Framework;Core;entity-framework-core;EF;Data;O/RM;EntityFramework;EntityFrameworkCore;EFCore</PackageTags>
     <VersionPrefix>3.1.5</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
-    <FullOutputPath>$(OutputPath)/$(TargetFramework)</FullOutputPath>
   </PropertyGroup>
 
   <Import Project="../../XLinq.SQL/Commons.csproj" />
@@ -29,5 +28,10 @@
     <ProjectReference Include="..\ExTree\ExTree.csproj" />
     <ProjectReference Include="..\..\XLinq.SQL\SQLGrammar\SQLGrammar.csproj" />
   </ItemGroup>
+
+  <Target Name="Obfuscar">
+    <Exec Command="$(SolutionDir).tools/obfuscar.console obfuscar.xml" WorkingDirectory="$(OutputPath)$(TargetFramework)"/>
+    <Copy SourceFiles="$(OutputPath)$(TargetFramework)/obfuscated/$(AssemblyName).dll" DestinationFolder="$(OutputPath)$(TargetFramework)" />
+  </Target>
 
 </Project>
