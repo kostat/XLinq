@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Streamx.Linq.ExTree</RootNamespace>
+    <AssemblyName>Streamx.Linq.ExTree</AssemblyName>
     <VersionPrefix>3.1.4</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
+    <FullOutputPath>$(OutputPath)</FullOutputPath>
   </PropertyGroup>
 
   <Import Project="../../XLinq.SQL/Commons.csproj" />

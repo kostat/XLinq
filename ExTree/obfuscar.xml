@@ -4,5 +4,5 @@
   <Var name="KeepPublicApi" value="true" />
   <Var name="HidePrivateApi" value="true" />
 
-  <Module file="ExTree.dll" />
+  <Module file="Streamx.Linq.ExTree.dll" />
 </Obfuscator>
