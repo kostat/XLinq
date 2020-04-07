@@ -29,9 +29,4 @@
     <ProjectReference Include="..\..\XLinq.SQL\SQLGrammar\SQLGrammar.csproj" />
   </ItemGroup>
 
-  <Target Name="Obfuscar">
-    <Exec Command="$(SolutionDir).tools/obfuscar.console obfuscar.xml" WorkingDirectory="$(OutputPath)$(TargetFramework)"/>
-    <Copy SourceFiles="$(OutputPath)$(TargetFramework)/obfuscated/$(AssemblyName).dll" DestinationFolder="$(OutputPath)$(TargetFramework)" />
-  </Target>
-
 </Project>
