@@ -1,6 +1,6 @@
 <Project>
 
-    <Target Name="PostBuildScript" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'" Condition="$(TargetFramework) != ''">
+    <Target Name="PostBuildScript" AfterTargets="Build" Condition="'$(Configuration)' == 'Release' and $(TargetFramework) != ''">
         <CallTarget Targets="Obfuscar" />
     </Target>
 
