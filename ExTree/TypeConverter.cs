@@ -18,11 +18,11 @@ namespace Streamx.Linq.ExTree {
         }
 
         private Object Convert(Type from, Object value) {
-            
+
             if (_to.IsEnum) {
                 return Enum.ToObject(_to, value);
             }
-            
+
             if (from == typeof(int))
                 return Convert((int) value);
 
@@ -30,21 +30,25 @@ namespace Streamx.Linq.ExTree {
         }
 
         private Object Convert(int value) {
-            if (_to == typeof(bool)) {
-                if (value == 0)
-                    return false;
 
-                if (value == 1)
-                    return true;
-            }
-            else if (_to == typeof(char)) {
-                return (char) value;
-            }
-            else if (_to == typeof(byte)) {
-                return (byte) value;
-            }
-            else if (_to == typeof(short)) {
-                return (short) value;
+            switch (Type.GetTypeCode(_to)) {
+                case TypeCode.Boolean:
+                    if (value == 0)
+                        return false;
+
+                    if (value == 1)
+                        return true;
+                    break;
+                case TypeCode.Char:
+                    return (char) value;
+                case TypeCode.SByte:
+                    return (sbyte) value;
+                case TypeCode.Byte:
+                    return (byte) value;
+                case TypeCode.Int16:
+                    return (short) value;
+                case TypeCode.UInt16:
+                    return (ushort) value;
             }
 
             return DefaultConvert(value);
@@ -67,12 +71,14 @@ namespace Streamx.Linq.ExTree {
         protected override Expression VisitBinary(BinaryExpression node) {
             if (_to.IsAssignableFrom(node))
                 return node;
+            // ReSharper disable AssignNullToNotNullAttribute
             return Expression.MakeBinary(node.NodeType, Visit(node.Left), Visit(node.Right));
         }
 
         protected override Expression VisitConditional(ConditionalExpression node) {
             if (_to.IsAssignableFrom(node))
                 return node;
+            // ReSharper disable AssignNullToNotNullAttribute
             return Expression.Condition(node.Test, Visit(node.IfTrue), Visit(node.IfFalse));
         }
 
@@ -115,16 +121,7 @@ namespace Streamx.Linq.ExTree {
         private static bool IsIntegral(this Type t) {
             if (t.IsPrimitive) {
                 var typeCode = Type.GetTypeCode(t);
-
-                switch (typeCode) {
-                    case TypeCode.Byte:
-                    case TypeCode.Int16:
-                    case TypeCode.Int32:
-                    case TypeCode.Int64:
-                        return true;
-                    default:
-                        return false;
-                }
+                return typeCode >= TypeCode.SByte && typeCode <= TypeCode.UInt64;
             }
 
             return t == typeof(BigInteger);
