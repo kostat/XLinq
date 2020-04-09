@@ -3,6 +3,8 @@
   <Var name="OutPath" value="obfuscated" />
   <Var name="KeepPublicApi" value="true" />
   <Var name="HidePrivateApi" value="true" />
+  <Var name="SuppressIldasm" value="false" />
+  <Var name="HideStrings" value="false" />
 
   <Module file="Streamx.Linq.ExTree.dll" />
 </Obfuscator>
