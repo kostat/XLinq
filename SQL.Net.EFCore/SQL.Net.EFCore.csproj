@@ -15,7 +15,7 @@
       
 Interactive tutorial available at http://xlinq.live.
     </Description>
-    <Title>XLinq for EF Core</Title>
+    <Title>ELinq for EF Core</Title>
   </PropertyGroup>
 
   <ItemGroup>

@@ -18,9 +18,14 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <None Update="obfuscar.xml">
+        <None Update="obfuscar.xml" Visible="false">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="../icon-256.png" />
+        <None Include="../../XLinq.SQL/icon-256.png" Pack="true" Visible="false" PackagePath="" />
     </ItemGroup>
 
 </Project>
