@@ -14,9 +14,9 @@ using Streamx.Linq.SQL.Grammar.Configuration;
 namespace Streamx.Linq.SQL.EFCore {
     // ReSharper disable once InconsistentNaming
     /// <summary>
-    /// XLinq globals
+    /// ELinq globals
     /// </summary>
-    public static partial class XLinq {
+    public static partial class ELinq {
 
         private static readonly PropertyInfo DEBUG_VIEW =
 #if DEBUG
@@ -71,7 +71,7 @@ namespace Streamx.Linq.SQL.EFCore {
         }
         
         /// <summary>
-        /// Access XLinq global configuration 
+        /// Access ELinq global configuration 
         /// </summary>
         public static IConfiguration Configuration { get; } = new Configuration();
 

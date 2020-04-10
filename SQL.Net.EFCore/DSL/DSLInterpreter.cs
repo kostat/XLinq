@@ -105,7 +105,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             CommonTableExpressionAttribute cte) {
             foreach (var scap in f.ParameterContextCapabilities) {
                 var cap = Capability.Parse(scap);
-                if (XLinq.Capabilities.Contains(cap))
+                if (ELinq.Capabilities.Contains(cap))
                     return cap.Hint<ParameterContext>();
             }
 
@@ -1301,7 +1301,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     StringBuilder fromBuilder = SubQueryManager.isRequiresParentheses(seq)
                         ? new StringBuilder().Append(LEFT_PARAN).Append(seq).Append(RIGHT_PARAN)
                         : new StringBuilder().Append(seq);
-                    fromBuilder.Append(XLinq.Capabilities.Contains(Capability.TABLE_AS_ALIAS) ? SEP_AS_SEP : KEYWORD_DELIMITER);
+                    fromBuilder.Append(ELinq.Capabilities.Contains(Capability.TABLE_AS_ALIAS) ? SEP_AS_SEP : KEYWORD_DELIMITER);
                     var aliased = fromBuilder.Append(label);
                     
                     if (tupleViewMap.TryGetValue(seq, out var view))
@@ -1328,7 +1328,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     || (renderingContext == ParameterContext.FromWithoutAlias && hasLabel)) {
                     // undeclaredAliases.Remove(label); //TODO ??
                     StringBuilder fromBuilder = new StringBuilder().Append(tableName);
-                    fromBuilder.Append(XLinq.Capabilities.Contains(Capability.TABLE_AS_ALIAS) ? SEP_AS_SEP : KEYWORD_DELIMITER);
+                    fromBuilder.Append(ELinq.Capabilities.Contains(Capability.TABLE_AS_ALIAS) ? SEP_AS_SEP : KEYWORD_DELIMITER);
                     var aliased = fromBuilder.Append(label);
                     
                     if (tupleViewMap.TryGetValue(seq, out var view))

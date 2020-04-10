@@ -15,7 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Streamx.Linq.SQL.EFCore {
     // ReSharper disable once InconsistentNaming
-    partial class XLinq {
+    partial class ELinq {
         private static async Task Validate(String key) {
 
             var tempDir = Path.GetTempPath();
@@ -81,7 +81,7 @@ namespace Streamx.Linq.SQL.EFCore {
                     match = Regex.Match(result, getPattern("code"));
                     var code = getMatch(match);
 
-                    throw new SecurityTokenValidationException($"Error loading XLinq: {message} Reason: {code}");
+                    throw new SecurityTokenValidationException($"Error loading ELinq: {message} Reason: {code}");
                 }
             }
 
@@ -190,7 +190,7 @@ namespace Streamx.Linq.SQL.EFCore {
             return payload.String("hostname", localHost)
                 .String("os", os)
                 .String("fingerprint", fingerprint)
-                .String("appVersion", "XLinq")
+                .String("appVersion", "ELinq")
                 .String("userHash", Environment.UserName)
                 .String("productId", "ad65ea0b-45af-43e1-b87c-4bd48f01f78a")
                 .End();
@@ -277,11 +277,11 @@ namespace Streamx.Linq.SQL.EFCore {
 
         private static void ReportLicenseOk() {
 
-            PrintBanner("Thank you for using XLinq!");
+            PrintBanner("Thank you for using ELINQ!");
         }
 
         private static void ReportNoLicense() {
-            PrintBanner("Thank you for using XLinq!\nNo valid XLinq license file was found.\nWelcome to trial period.");
+            PrintBanner("Thank you for using ELINQ!\nNo valid ELINQ developer license found.\nLicensed for trial use.");
         }
 
         private static void PrintBanner(String message) {
