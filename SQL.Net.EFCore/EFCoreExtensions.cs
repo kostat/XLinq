@@ -160,59 +160,59 @@ namespace Streamx.Linq.SQL.EFCore {
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
         /// </summary>
-        public static int Query(this DatabaseFacade source, Action query) =>
-            Query0(source, query);
+        public static int Execute(this DatabaseFacade source, Action query) =>
+            Execute0(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
         /// </summary>
-        public static int Query<TEntity>(this DatabaseFacade source, Action<TEntity> query)
+        public static int Execute<TEntity>(this DatabaseFacade source, Action<TEntity> query)
             where TEntity : class =>
-            Query0(source, query);
+            Execute0(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
         /// </summary>
-        public static int Query<TEntity, TEntity1>(this DatabaseFacade source, Action<TEntity, TEntity1> query)
+        public static int Execute<TEntity, TEntity1>(this DatabaseFacade source, Action<TEntity, TEntity1> query)
             where TEntity : class
             where TEntity1 : class =>
-            Query0(source, query);
+            Execute0(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
         /// </summary>
-        public static int Query<TEntity, TEntity1, TEntity2>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2> query)
+        public static int Execute<TEntity, TEntity1, TEntity2>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2> query)
             where TEntity : class
             where TEntity1 : class
             where TEntity2 : class =>
-            Query0(source, query);
+            Execute0(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
         /// </summary>
-        public static int Query<TEntity, TEntity1, TEntity2, TEntity3>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2, TEntity3> query)
+        public static int Execute<TEntity, TEntity1, TEntity2, TEntity3>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2, TEntity3> query)
             where TEntity : class
             where TEntity1 : class
             where TEntity2 : class
             where TEntity3 : class =>
-            Query0(source, query);
+            Execute0(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
         /// </summary>
-        public static int Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DatabaseFacade source,
+        public static int Execute<TEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DatabaseFacade source,
             Action<TEntity, TEntity1, TEntity2, TEntity3, TEntity4> query)
             where TEntity : class
             where TEntity1 : class
             where TEntity2 : class
             where TEntity3 : class
             where TEntity4 : class =>
-            Query0(source, query);
+            Execute0(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
         /// </summary>
-        public static int Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DatabaseFacade source,
+        public static int Execute<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DatabaseFacade source,
             Action<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5> query)
             where TEntity : class
             where TEntity1 : class
@@ -220,9 +220,9 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity3 : class
             where TEntity4 : class
             where TEntity5 : class =>
-            Query0(source, query);
+            Execute0(source, query);
 
-        private static int Query0<TDelegate>(DatabaseFacade db, TDelegate query)
+        private static int Execute0<TDelegate>(DatabaseFacade db, TDelegate query)
             where TDelegate : MulticastDelegate {
             var qsql = GetQuerySQL(db, query, out var @params);
             return db.ExecuteSqlRaw(qsql, @params);
