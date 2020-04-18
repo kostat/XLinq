@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -14,7 +15,7 @@ namespace Streamx.Linq.SQL.EFCore {
     /// <summary>
     /// ELinq extensions methods
     /// </summary>
-    public static partial class EFCoreExtensions {
+    public static class EFCoreExtensions {
         static EFCoreExtensions() {
             ELinq.Configuration.RegisterMethodSubstitution((Point s1, Point s2) => Equals(s1, s2), (object s1, object s2) => s1 == s2);
 
@@ -162,6 +163,12 @@ namespace Streamx.Linq.SQL.EFCore {
         /// </summary>
         public static int Execute(this DatabaseFacade source, Action query) =>
             Execute0(source, query);
+        
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
+        public static Task<int> ExecuteAsync(this DatabaseFacade source, Action query) =>
+            Execute0Async(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
@@ -169,6 +176,13 @@ namespace Streamx.Linq.SQL.EFCore {
         public static int Execute<TEntity>(this DatabaseFacade source, Action<TEntity> query)
             where TEntity : class =>
             Execute0(source, query);
+        
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
+        public static Task<int> ExecuteAsync<TEntity>(this DatabaseFacade source, Action<TEntity> query)
+            where TEntity : class =>
+            Execute0Async(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
@@ -177,6 +191,14 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity : class
             where TEntity1 : class =>
             Execute0(source, query);
+        
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
+        public static Task<int> ExecuteAsync<TEntity, TEntity1>(this DatabaseFacade source, Action<TEntity, TEntity1> query)
+            where TEntity : class
+            where TEntity1 : class =>
+            Execute0Async(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
@@ -186,6 +208,15 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity1 : class
             where TEntity2 : class =>
             Execute0(source, query);
+        
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
+        public static Task<int> ExecuteAsync<TEntity, TEntity1, TEntity2>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2> query)
+            where TEntity : class
+            where TEntity1 : class
+            where TEntity2 : class =>
+            Execute0Async(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
@@ -196,6 +227,16 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity2 : class
             where TEntity3 : class =>
             Execute0(source, query);
+        
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
+        public static Task<int> ExecuteAsync<TEntity, TEntity1, TEntity2, TEntity3>(this DatabaseFacade source, Action<TEntity, TEntity1, TEntity2, TEntity3> query)
+            where TEntity : class
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class =>
+            Execute0Async(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
@@ -208,6 +249,18 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity3 : class
             where TEntity4 : class =>
             Execute0(source, query);
+        
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
+        public static Task<int> ExecuteAsync<TEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DatabaseFacade source,
+            Action<TEntity, TEntity1, TEntity2, TEntity3, TEntity4> query)
+            where TEntity : class
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class
+            where TEntity4 : class =>
+            Execute0Async(source, query);
 
         /// <summary>
         /// Executes the given XLINQ query against the database and returns the number of rows affected.
@@ -221,11 +274,30 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity4 : class
             where TEntity5 : class =>
             Execute0(source, query);
+        
+        /// <summary>
+        /// Executes the given XLINQ query against the database and returns the number of rows affected.
+        /// </summary>
+        public static Task<int> ExecuteAsync<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DatabaseFacade source,
+            Action<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5> query)
+            where TEntity : class
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class
+            where TEntity4 : class
+            where TEntity5 : class =>
+            Execute0Async(source, query);
 
         private static int Execute0<TDelegate>(DatabaseFacade db, TDelegate query)
             where TDelegate : MulticastDelegate {
             var qsql = GetQuerySQL(db, query, out var @params);
             return db.ExecuteSqlRaw(qsql, @params);
+        }
+        
+        private static Task<int> Execute0Async<TDelegate>(DatabaseFacade db, TDelegate query)
+            where TDelegate : MulticastDelegate {
+            var qsql = GetQuerySQL(db, query, out var @params);
+            return db.ExecuteSqlRawAsync(qsql, @params);
         }
 
         /// <summary>
