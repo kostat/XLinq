@@ -33,7 +33,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         public static readonly TranslationError REQUIRES_LICENSE = new TranslationError("{0} requires a license. Get one at https://fluentjpa.com");
 
         public static readonly TranslationError UNMAPPED_FIELD =
-            new TranslationError("Cannot translate property: {0}. FluentJPA methods must be either static, interface default or annotated with [Local]");
+            new TranslationError("Cannot translate property: {0}.{1}. Ensure the type {0} is mapped. Note, that ELINQ custom methods must be either static, interface default or attributed with [Local]");
         
         public static readonly TranslationError UNEXPECTED_ASSOCIATION =
             new TranslationError("Unexpected entity association: {0} = {1}");

@@ -103,13 +103,13 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 if (isEntityLike(methodBase.ReturnType)) {
                     var assoc = FindAssociation(target, methodBase, true);
                     if (assoc == null)
-                        throw TranslationError.UNMAPPED_FIELD.getError(methodBase);
+                        throw TranslationError.UNMAPPED_FIELD.getError(target, methodBase.Name);
                     return new IdentifierPath.MultiColumnIdentifierPath(Quoter(methodBase.Name), _ => assoc, null);
                 }
                 
                 var prop = FindProperty(target, methodBase, (e, mi) => e.FindProperty(mi));
                 if (prop == null && !IsEntity(target) && !target.IsDefined(typeof(TupleAttribute)))
-                    throw TranslationError.UNMAPPED_FIELD.getError(methodBase);
+                    throw TranslationError.UNMAPPED_FIELD.getError(target, methodBase.Name);
                 var columnName = prop == null ? RemoveSpecialPrefix(methodBase.Name) : prop.GetColumnName();
                 return new IdentifierPath.Resolved(Quoter(columnName).AsSequence(), methodBase.DeclaringType, methodBase.Name, null);
             }
