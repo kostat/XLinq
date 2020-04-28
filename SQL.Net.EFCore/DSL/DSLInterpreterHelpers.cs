@@ -240,6 +240,16 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             public override ISequence<char> Wrapped { get; }
         }
 
+        sealed class AliasedSequence : DelegatedSequence {
+            public AliasedSequence(ISequence<char> wrapped, ISequence<char> alias) {
+                Wrapped = wrapped;
+                Alias = alias;
+            }
+
+            public override ISequence<char> Wrapped { get; }
+            public ISequence<char> Alias { get; }
+        }
+
         sealed class View {
 
             private ISequence<char> columns;

@@ -48,10 +48,10 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 #else
             new String("PRIMARY");
 #endif
+        private static readonly ISequence<char> SELF_ALIAS = "SELF".AsSequence();
         private readonly IDictionary<ISequence<char>, String> tableRefs = new Dictionary<ISequence<char>, String>();
         private IDictionary<ISequence<char>, IDictionary<String, ISequence<char>>> tableSecondaryRefs = Collections.emptyDictionary<ISequence<char>, IDictionary<String, ISequence<char>>>();
         private IDictionary<ISequence<char>, ISequence<char>> aliases_ = Collections.emptyDictionary<ISequence<char>, ISequence<char>>();
-        private ISequence<char> subQueryAlias;
         private IList<ISequence<char>> undeclaredAliases = Collections.emptyList<ISequence<char>>();
         private Expression argumentsTarget; // used to differentiate invocation vs. reference
 
@@ -472,17 +472,17 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 
                 var fparams = ffparams.Select(_ => _()).ToList();
                 
-                IDictionary<ISequence<char>, ISequence<char>> currentAliases;
+                IDictionary<ISequence<char>, ISequence<char>> currentAliases, capturedAliases;
                 SubQueryManager currentSubQueries, capturedSubQueries;
 
                 if (allocateScope) {
                     currentAliases = aliases_;
-                    aliases_ = new ScopedDictionary<ISequence<char>, ISequence<char>>(currentAliases);
+                    capturedAliases = aliases_ = new ScopedDictionary<ISequence<char>, ISequence<char>>(currentAliases);
                     currentSubQueries = subQueries_;
                     capturedSubQueries = subQueries_ = new SubQueryManager(currentSubQueries);
                 }
                 else {
-                    currentAliases = null;
+                    currentAliases = capturedAliases = null;
                     currentSubQueries = capturedSubQueries = null;
                 }
 
@@ -508,6 +508,10 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     var x = ff()//.compose(visitParameters(e.Parameters)
                         .andThen(seq => {
                             try {
+                                // ReSharper disable once PossibleNullReferenceException
+                                if (allocateScope && capturedAliases.TryGetValue(SELF_ALIAS, out var alias)) {
+                                    seq = new AliasedSequence(seq, alias);
+                                }
                                 return seq;
                             }
                             finally {
@@ -664,22 +668,9 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
             return () =>  {
                 bool isSubQuery = m.IsDefined(typeof(SubQueryAttribute));
-                ISequence<char> localSubQueryAlias = null;
-                ISequence<char> previousSubQueryAlias = null;
-                
-                if (isSubQuery) {
-                    previousSubQueryAlias = this.subQueryAlias;
-                    localSubQueryAlias = (SUB_QUERY_ALIAS_PREFIX + subQueriesCounter++).AsSequence();
-                    this.subQueryAlias = localSubQueryAlias;
-                }
-
                 var instance = finstance?.Invoke();
                 
                 var boundArgs1 = boundArgs0.Select(_ => _()).ToList();
-                
-                if (isSubQuery) {
-                    this.subQueryAlias = previousSubQueryAlias;
-                }
 
                 // Alias alias = m.getAnnotation(Alias.class);
                 var alias = m.GetCustomAttribute<AliasAttribute>();
@@ -775,16 +766,20 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     switch (cte.Value) {
                         case CommonTableExpressionType.Self: {
 
-                            var subQueryAlias1 = this.subQueryAlias;
-
                             if (!selfToType.TryGetValue(ei, out var self)) {
                                 if (selfToType.IsEmpty())
                                     selfToType = new Dictionary<Expression, Func<ISequence<char>>>();
                                 selfToType[ei] = self = visit(Expression.Parameter(e.Type))();
                             }
 
-                            return () =>
-                                subQueries.put(self(), subQueryAlias1, false);
+                            return () => {
+                                if (!aliases.TryGetValue(SELF_ALIAS, out var localSubQueryAlias)) {
+                                    localSubQueryAlias = (SUB_QUERY_ALIAS_PREFIX + subQueriesCounter++).AsSequence();
+                                    aliases.put(SELF_ALIAS, localSubQueryAlias);
+                                }
+
+                                return subQueries.put(self(), localSubQueryAlias, false);
+                            };
                         }
                         case CommonTableExpressionType.Declaration:
                             return () => {
@@ -1206,7 +1201,16 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     }
 
                     if (isSubQuery) {
-                        return subQueries.put(localSubQueryAlias, boundArgs1.First()());
+                        ISequence<char> localSubQueryAlias;
+                        var subQuerySeq = boundArgs1.First()();
+                        if (subQuerySeq is AliasedSequence als) {
+                            subQuerySeq = als.Wrapped;
+                            localSubQueryAlias = als.Alias;
+                        }
+                        else {
+                            localSubQueryAlias = (SUB_QUERY_ALIAS_PREFIX + subQueriesCounter++).AsSequence();
+                        }
+                        return subQueries.put(localSubQueryAlias, subQuerySeq);
                     }
 
                     //return () => {
