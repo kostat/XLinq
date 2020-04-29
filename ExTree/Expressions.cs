@@ -7,7 +7,7 @@ namespace Streamx.Linq.ExTree {
     internal static class Expressions {
         private static readonly Expression ZERO = Expression.Constant(0);
         private static readonly Expression NULL = Expression.Constant(null);
-        public static readonly Expression TRUE = Expression.Constant(true);
+        private static readonly Expression TRUE = Expression.Constant(true);
 
         public static bool IsInt31(this Expression e) =>
             e is ConstantExpression eConst && ((e.IsInt32() && (int) eConst.Value == 31) || (e.IsBool() && (bool) eConst.Value));
@@ -108,6 +108,11 @@ namespace Streamx.Linq.ExTree {
             else {
                 toReduce = null;
                 toLeave = null;
+
+                if (expressionType == ExpressionType.Equal && first is MethodCallExpression fmc && second is MethodCallExpression smc) {
+                    if (fmc.Method.MetadataToken == MethodVisitor.HAS_VALUE && smc.Method.MetadataToken == MethodVisitor.HAS_VALUE)
+                        return TRUE;
+                }
             }
 
             if (toLeave != null && toLeave.IsBool()) {
@@ -262,6 +267,7 @@ namespace Streamx.Linq.ExTree {
             }
 
             protected override Expression VisitLambda<T>(Expression<T> node) {
+                Value = true;
                 return node;
             }
 

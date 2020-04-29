@@ -25,7 +25,7 @@ namespace Streamx.Linq.ExTree {
         private readonly Type _returnType;
 
         // ReSharper disable once PossibleNullReferenceException
-        private static readonly int HAS_VALUE = typeof(Nullable<>).GetProperty("HasValue").GetMethod.MetadataToken;
+        internal static readonly int HAS_VALUE = typeof(Nullable<>).GetProperty("HasValue").GetMethod.MetadataToken;
 
         // ReSharper disable once PossibleNullReferenceException
         private static readonly int ARRAY_EMPTY = typeof(Array).GetMethod("Empty").MetadataToken;
