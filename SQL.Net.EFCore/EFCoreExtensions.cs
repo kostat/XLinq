@@ -306,7 +306,7 @@ namespace Streamx.Linq.SQL.EFCore {
         public static string GetQuerySQL<TDelegate>(IInfrastructure<IServiceProvider> source, TDelegate query, out object[] @params)
             where TDelegate : MulticastDelegate {
 
-            ELinq.EnsureLicense();
+            // ELinq.EnsureLicense();
             
             var parsed = (Expression) ExpressionTree.Parse(query);
 
