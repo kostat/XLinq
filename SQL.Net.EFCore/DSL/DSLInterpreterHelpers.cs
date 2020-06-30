@@ -516,6 +516,14 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
             return e;
         }
+
+        private void AddFlat(IList<Expression> target, Expression a) {
+            if (a is NewExpression ne && typeof(ITuple).IsAssignableFrom(a.Type))
+                foreach (var e in ne.Arguments)
+                    AddFlat(target, bind(e));
+            else
+                target.Add(a);
+        }
         
         private IList<Expression> bind(
             IList<Expression> curArgs) {
@@ -529,13 +537,9 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                         foreach (var e in nae.Expressions)
                             newArgs.Add(bind(e));
                     }
-                    else if (a is NewExpression ne && typeof(ITuple).IsAssignableFrom(a.Type)) {
-                        newArgs.AddRange(ne.Arguments);
-                    }
-                    else {
-                        newArgs.Add(a);
-                    }
-                    
+                    else
+                        AddFlat(newArgs, a);
+
                     // if (a is ParameterExpression) {
                     //     int index = ((ParameterExpression) a).getIndex();
                     //     if (index >= eargs.size())
