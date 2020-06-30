@@ -102,9 +102,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
                 if (isEntityLike(methodBase.ReturnType)) {
                     var assoc = FindAssociation(target, methodBase, true);
-                    if (assoc == null)
-                        throw TranslationError.UNMAPPED_FIELD.getError(target, methodBase.Name);
-                    return new IdentifierPath.MultiColumnIdentifierPath(Quoter(methodBase.Name), _ => assoc, null);
+                    if (assoc != null)
+                        return new IdentifierPath.MultiColumnIdentifierPath(Quoter(methodBase.Name), _ => assoc, null);
                 }
                 
                 var prop = FindProperty(target, methodBase, (e, mi) => e.FindProperty(mi));
