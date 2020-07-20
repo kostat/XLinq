@@ -170,11 +170,8 @@ namespace Streamx.Linq.ExTree {
             _exprStack.Push(e);
         }
 
-        private static Expression CreateDefaultConstant(Type type) {
-            return type.IsValueType
-                ? Expression.Constant(Activator.CreateInstance(type))
-                : Expression.Constant(null, type);
-        }
+        private static Expression CreateDefaultConstant(Type type) => 
+            Expression.Constant(type.IsValueType ? Activator.CreateInstance(type) : null, type);
 
         public void VisitInsn(ILOpCode opCode) {
             Expression e;
