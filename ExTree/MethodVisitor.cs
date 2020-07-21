@@ -41,6 +41,8 @@ namespace Streamx.Linq.ExTree {
         public ReadOnlyCollection<Expression> Statements => _statements.AsReadOnly();
 
         public ReadOnlyCollection<ParameterExpression> Variables => _variables.AsReadOnly();
+        
+        public bool NotCacheable { get; set; }
 
         private List<ExpressionStack> GetBranchUsers(Label label) {
             if (!_branches.TryGetValue(label, out var bl)) {
@@ -727,6 +729,7 @@ namespace Streamx.Linq.ExTree {
                         Delegate compiled;
                         try {
                             compiled = Expression.Lambda(instance).Compile();
+                            this.NotCacheable = true;
                         }
                         catch (InvalidOperationException ioe) {
                             // cannot compile
