@@ -202,7 +202,7 @@ namespace Streamx.Linq.ExTree {
                 case ILOpCode.Cgt:
                     first = _exprStack.Pop();
                     second = _exprStack.Pop();
-                    e = Expression.GreaterThan(second, first);
+                    e = Expression.GreaterThan(second.EnsureNumeric(), first.EnsureNumeric());
                     break;
                 case ILOpCode.Cgt_un:
                     first = _exprStack.Pop();
@@ -211,13 +211,13 @@ namespace Streamx.Linq.ExTree {
                     if (first is ConstantExpression firstNull && firstNull.Value == null)
                         e = second.Type == typeof(bool) ? second : Expressions.NotEqual(second, first);
                     else
-                        e = Expression.GreaterThan(second, first);
+                        e = Expression.GreaterThan(second.EnsureNumeric(), first.EnsureNumeric());
                     break;
                 case ILOpCode.Clt:
                 case ILOpCode.Clt_un:
                     first = _exprStack.Pop();
                     second = _exprStack.Pop();
-                    e = Expression.LessThan(second, first);
+                    e = Expression.LessThan(second.EnsureNumeric(), first.EnsureNumeric());
                     break;
                 case ILOpCode.Conv_i1:
                 case ILOpCode.Conv_i2:
@@ -499,7 +499,7 @@ namespace Streamx.Linq.ExTree {
 
             Expression second = _exprStack.Pop();
             Expression first = _exprStack.Pop();
-            e = Expression.MakeBinary(eType, first, second);
+            e = Expression.MakeBinary(eType, first, TypeConverter.Convert(second, first.Type));
 
             Branch(label, e);
 
