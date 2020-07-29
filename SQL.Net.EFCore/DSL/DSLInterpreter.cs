@@ -630,11 +630,9 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             Func<Func<ISequence<char>>> f = () => {
                 var aliases = getAliases();
                 return () => {
-                    if (!contexts.TryGetValue(value, out var map))
+                    if (!contexts.TryGetValue(value, out var map) ||
+                        !map.TryGetValue(node.Member, out var seq))
                         return registerParameter(value, node.Member);
-
-                    if (!map.TryGetValue(node.Member, out var seq))
-                        return null;
 
                     if (original != node) {
                         if (!tupleViewMap.TryGetValue(seq, out var view))
