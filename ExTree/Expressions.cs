@@ -66,7 +66,7 @@ namespace Streamx.Linq.ExTree {
                     left = TypeConverter.Convert(left, right.Type);
             }
 
-            return Expression.MakeBinary(expressionType, left, right);
+            return Expression.MakeBinary(expressionType, left, TypeConverter.Convert(right, left.Type));
         }
 
         public static BinaryExpression Add(Expression first,
@@ -132,7 +132,9 @@ namespace Streamx.Linq.ExTree {
                 }
             }
 
-            return CreateNumeric(expressionType, first, second);
+            if (expressionType != ExpressionType.Equal)
+                first = first.EnsureNumeric();
+            return Expression.MakeBinary(expressionType, first, TypeConverter.Convert(second, first.Type));
         }
 
         public static Expression Equal(Expression first,

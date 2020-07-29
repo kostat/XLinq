@@ -499,6 +499,8 @@ namespace Streamx.Linq.ExTree {
 
             Expression second = _exprStack.Pop();
             Expression first = _exprStack.Pop();
+            if (eType != ExpressionType.Equal)
+                first = first.EnsureNumeric();
             e = Expression.MakeBinary(eType, first, TypeConverter.Convert(second, first.Type));
 
             Branch(label, e);
