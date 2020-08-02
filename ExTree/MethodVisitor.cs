@@ -41,7 +41,7 @@ namespace Streamx.Linq.ExTree {
         public ReadOnlyCollection<Expression> Statements => _statements.AsReadOnly();
 
         public ReadOnlyCollection<ParameterExpression> Variables => _variables.AsReadOnly();
-        
+
         public bool NotCacheable { get; set; }
 
         private List<ExpressionStack> GetBranchUsers(Label label) {
@@ -156,6 +156,10 @@ namespace Streamx.Linq.ExTree {
                     if (fieldInfo.DeclaringType.IsSynthetic() || fieldInfo.IsSynthetic()) {
                         e = _exprStack.Pop();
                         var var = _exprStack.Pop();
+
+                        if (var.NodeType == ExpressionType.MemberAccess)
+                            return;
+
                         if (var.NodeType != ExpressionType.Parameter && var.NodeType != ExpressionType.Constant)
                             goto default;
                         e = Expression.Assign(Expression.Field(var, fieldInfo), e);
@@ -172,7 +176,7 @@ namespace Streamx.Linq.ExTree {
             _exprStack.Push(e);
         }
 
-        private static Expression CreateDefaultConstant(Type type) => 
+        private static Expression CreateDefaultConstant(Type type) =>
             Expression.Constant(type.IsValueType ? Activator.CreateInstance(type) : null, type);
 
         public void VisitInsn(ILOpCode opCode) {
@@ -531,7 +535,7 @@ namespace Streamx.Linq.ExTree {
                         right = firstB.True.LocalVariables[i].Get(_statements, _variables);
                         left = firstB.False.LocalVariables[i].Get(_statements, _variables);
 
-                        if (right != left) {
+                        if (right != left && left != null) {
 
                             var condition = Expressions.Condition(firstB.Test, right, left);
 
