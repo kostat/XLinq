@@ -12,6 +12,9 @@ namespace Streamx.Linq.ExTree {
         public static bool IsInt31(this Expression e) =>
             e is ConstantExpression eConst && ((e.IsInt32() && (int) eConst.Value == 31) || (e.IsBool() && (bool) eConst.Value));
 
+        public static Expression EnsureNumeric(this Expression e) =>
+            e.Type.IsEnum ? Expression.Convert(e, Enum.GetUnderlyingType(e.Type)) : e;
+
         public static bool IsSynthetic(this MemberInfo typeInfo) =>
             typeInfo.IsDefined(typeof(CompilerGeneratedAttribute));
 
@@ -63,7 +66,7 @@ namespace Streamx.Linq.ExTree {
                     left = TypeConverter.Convert(left, right.Type);
             }
 
-            return Expression.MakeBinary(expressionType, left, right);
+            return Expression.MakeBinary(expressionType, left, TypeConverter.Convert(right, left.Type));
         }
 
         public static BinaryExpression Add(Expression first,
@@ -129,6 +132,8 @@ namespace Streamx.Linq.ExTree {
                 }
             }
 
+            if (expressionType != ExpressionType.Equal)
+                first = first.EnsureNumeric();
             return Expression.MakeBinary(expressionType, first, TypeConverter.Convert(second, first.Type));
         }
 

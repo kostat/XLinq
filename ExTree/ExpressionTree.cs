@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -23,14 +24,148 @@ namespace Streamx.Linq.ExTree {
             return (Expression<TDelegate>) Parse(typeof(TDelegate), targetExpression, method);
         }
 
+        private readonly struct CacheEntry {
+            public readonly Expression Body;
+            public readonly Expression Target;
+            public readonly IList<ParameterExpression> Parameters;
+
+            public CacheEntry(Expression body, Expression target, IList<ParameterExpression> parameters) {
+                Body = body;
+                Target = target;
+                Parameters = parameters;
+            }
+        }
+
+        private readonly struct ArrayComparer<T> : IEquatable<ArrayComparer<T>> {
+            private readonly T[] data;
+
+            public ArrayComparer(T[] data) {
+                this.data = data;
+            }
+
+            public override bool Equals(object obj) {
+                return obj is ArrayComparer<T> other && Equals(other);
+            }
+
+            //override 
+            public bool Equals(ArrayComparer<T> other) {
+                if (data != null) {
+                    IStructuralEquatable structuralEquator = data;
+                    return structuralEquator.Equals(other.data);
+                }
+
+                return ReferenceEquals(data, other.data);
+            }
+
+            public override int GetHashCode() {
+                if (data != null) {
+                    IStructuralEquatable structuralEquator = data;
+                    return structuralEquator.GetHashCode();
+                }
+
+                return 0;
+            }
+
+            public static bool operator ==(ArrayComparer<T> left, ArrayComparer<T> right) {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(ArrayComparer<T> left, ArrayComparer<T> right) {
+                return !left.Equals(right);
+            }
+        }
+
+        private static readonly MruCache<(Module, int, ArrayComparer<Type>, ArrayComparer<Type>), CacheEntry> CACHE =
+            new MruCache<(Module, int, ArrayComparer<Type>, ArrayComparer<Type>), CacheEntry>(1000);
+
+        private class CacheReplacer : ExpressionVisitor {
+            private readonly IDictionary<Expression, Expression> map;
+
+            public CacheReplacer(IDictionary<Expression, Expression> map) {
+                this.map = map;
+            }
+
+            public override Expression Visit(Expression node) =>
+                node != null && map.TryGetValue(node, out var value) ? value : base.Visit(node);
+        }
+
         public static LambdaExpression Parse(Type delegateType, Expression targetExpression, MethodInfo method, IList<Expression> arguments = null) {
+
             var parameters = method.GetParameters().Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToList();
+
+            CacheEntry cached;
+
+            var methodArgs = method.IsGenericMethod ? method.GetGenericArguments() : null;
+            var declaringType = method.DeclaringType;
+            // ReSharper disable once PossibleNullReferenceException
+            var typeArgs = declaringType.IsGenericType ? declaringType.GetGenericArguments() : null;
+            var cacheKey = (method.Module, method.MetadataToken, new ArrayComparer<Type>(typeArgs), new ArrayComparer<Type>(methodArgs));
+            
+            {
+                bool foundInCache;
+                lock (CACHE) {
+                    foundInCache = CACHE.TryGetValue(cacheKey, out cached);
+                }
+
+                if (foundInCache) {
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    return Expression.Lambda(delegateType, bind(cached), parameters);
+                }
+            }
+
             var visitor = new MethodVisitor(targetExpression, parameters, method.ReturnType, arguments);
 
             Visit(visitor, method);
+            Expression body = Expression.Block(method.ReturnType, visitor.Variables, visitor.Statements);
 
-            var body = Expression.Block(method.ReturnType, visitor.Variables, visitor.Statements);
-            return Expression.Lambda(delegateType, body, parameters);
+            if (visitor.NotCacheable)
+                return Expression.Lambda(delegateType, body, parameters);
+
+            {
+                var map = new Dictionary<Expression, Expression>();
+                var target = targetExpression;
+                if (target != null) {
+                    target = Expression.Constant(targetExpression.Type.IsValueType ? Activator.CreateInstance(targetExpression.Type) : null,
+                        targetExpression.Type);
+                    map.Add(targetExpression, target);
+                }
+
+                if (arguments != null) {
+                    for (var i = 0; i < arguments.Count; i++) {
+                        map.Add(arguments[i], parameters[i]);
+                    }
+                }
+
+                var replacer = new CacheReplacer(map);
+                body = replacer.Visit(body);
+                lock (CACHE) {
+                    if (!CACHE.TryGetValue(cacheKey, out cached)) {
+
+                        cached = new CacheEntry(body, target, parameters);
+                        CACHE.Add(cacheKey, cached);
+                    }
+                }
+            }
+
+            return Expression.Lambda(delegateType, bind(cached), parameters);
+
+            Expression bind(CacheEntry entry) {
+                Expression cachedBody = entry.Body;
+                if (entry.Target != null || parameters.Any()) {
+                    var map = new Dictionary<Expression, Expression>();
+                    if (entry.Target != null)
+                        map.Add(entry.Target, targetExpression);
+
+                    for (var i = 0; i < entry.Parameters.Count; i++) {
+                        map.Add(entry.Parameters[i], arguments != null ? arguments[i] : parameters[i]);
+                    }
+
+                    var replacer = new CacheReplacer(map);
+                    cachedBody = replacer.Visit(cachedBody);
+                }
+
+                return cachedBody;
+            }
         }
 
         public static LambdaExpression Parse(Expression targetExpression, MethodInfo method, IList<Expression> arguments = null) {

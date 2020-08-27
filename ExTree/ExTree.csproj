@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Streamx.Linq.ExTree</AssemblyName>
-    <VersionPrefix>3.1.6</VersionPrefix>
+    <VersionPrefix>3.1.7</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
   </PropertyGroup>
 

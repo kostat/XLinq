@@ -42,6 +42,8 @@ namespace Streamx.Linq.ExTree {
 
         public ReadOnlyCollection<ParameterExpression> Variables => _variables.AsReadOnly();
 
+        public bool NotCacheable { get; set; }
+
         private List<ExpressionStack> GetBranchUsers(Label label) {
             if (!_branches.TryGetValue(label, out var bl)) {
                 bl = new List<ExpressionStack>();
@@ -154,6 +156,10 @@ namespace Streamx.Linq.ExTree {
                     if (fieldInfo.DeclaringType.IsSynthetic() || fieldInfo.IsSynthetic()) {
                         e = _exprStack.Pop();
                         var var = _exprStack.Pop();
+
+                        if (var.NodeType == ExpressionType.MemberAccess)
+                            return;
+
                         if (var.NodeType != ExpressionType.Parameter && var.NodeType != ExpressionType.Constant)
                             goto default;
                         e = Expression.Assign(Expression.Field(var, fieldInfo), e);
@@ -170,11 +176,8 @@ namespace Streamx.Linq.ExTree {
             _exprStack.Push(e);
         }
 
-        private static Expression CreateDefaultConstant(Type type) {
-            return type.IsValueType
-                ? Expression.Constant(Activator.CreateInstance(type))
-                : Expression.Constant(null, type);
-        }
+        private static Expression CreateDefaultConstant(Type type) =>
+            Expression.Constant(type.IsValueType ? Activator.CreateInstance(type) : null, type);
 
         public void VisitInsn(ILOpCode opCode) {
             Expression e;
@@ -203,7 +206,7 @@ namespace Streamx.Linq.ExTree {
                 case ILOpCode.Cgt:
                     first = _exprStack.Pop();
                     second = _exprStack.Pop();
-                    e = Expression.GreaterThan(second, first);
+                    e = Expression.GreaterThan(second.EnsureNumeric(), first.EnsureNumeric());
                     break;
                 case ILOpCode.Cgt_un:
                     first = _exprStack.Pop();
@@ -212,13 +215,13 @@ namespace Streamx.Linq.ExTree {
                     if (first is ConstantExpression firstNull && firstNull.Value == null)
                         e = second.Type == typeof(bool) ? second : Expressions.NotEqual(second, first);
                     else
-                        e = Expression.GreaterThan(second, first);
+                        e = Expression.GreaterThan(second.EnsureNumeric(), first.EnsureNumeric());
                     break;
                 case ILOpCode.Clt:
                 case ILOpCode.Clt_un:
                     first = _exprStack.Pop();
                     second = _exprStack.Pop();
-                    e = Expression.LessThan(second, first);
+                    e = Expression.LessThan(second.EnsureNumeric(), first.EnsureNumeric());
                     break;
                 case ILOpCode.Conv_i1:
                 case ILOpCode.Conv_i2:
@@ -500,7 +503,9 @@ namespace Streamx.Linq.ExTree {
 
             Expression second = _exprStack.Pop();
             Expression first = _exprStack.Pop();
-            e = Expression.MakeBinary(eType, first, second);
+            if (eType != ExpressionType.Equal)
+                first = first.EnsureNumeric();
+            e = Expression.MakeBinary(eType, first, TypeConverter.Convert(second, first.Type));
 
             Branch(label, e);
 
@@ -530,7 +535,7 @@ namespace Streamx.Linq.ExTree {
                         right = firstB.True.LocalVariables[i].Get(_statements, _variables);
                         left = firstB.False.LocalVariables[i].Get(_statements, _variables);
 
-                        if (right != left) {
+                        if (right != left && left != null) {
 
                             var condition = Expressions.Condition(firstB.Test, right, left);
 
@@ -730,6 +735,7 @@ namespace Streamx.Linq.ExTree {
                         Delegate compiled;
                         try {
                             compiled = Expression.Lambda(instance).Compile();
+                            this.NotCacheable = true;
                         }
                         catch (InvalidOperationException ioe) {
                             // cannot compile
