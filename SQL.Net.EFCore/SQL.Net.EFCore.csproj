@@ -18,9 +18,18 @@ Interactive tutorial available at http://xlinq.live.
     <Title>ELinq for EF Core</Title>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(EFCORE)'=='5' ">
+    <EFVersion>5.0.0-rc.1.20451.13</EFVersion>
+    <DefineConstants>EFCORE5</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(EFCORE)'=='' ">
+    <EFVersion>3.1.0</EFVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EFVersion)" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
   </ItemGroup>
