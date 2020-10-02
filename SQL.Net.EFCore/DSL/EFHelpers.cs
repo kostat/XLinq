@@ -149,8 +149,16 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         public String getTableName(Type entity) {
             var entityType = model.FindRuntimeEntityType(entity);
             // TODO: throw if null
-            var schema = entityType.GetSchema();
-            var tableName = Quoter(entityType.GetTableName());
+            var schema = entityType.GetSchema()
+#if EFCORE5
+                         ?? entityType.GetViewSchema()    
+#endif
+                    ;
+            var tableName = Quoter(entityType.GetTableName()
+#if EFCORE5
+                                   ?? entityType.GetViewName()
+#endif
+                    );
             return schema != null ? Quoter(schema) + DOT + tableName : tableName;
         }
     }
