@@ -157,7 +157,11 @@ namespace Streamx.Linq.ExTree {
                         map.Add(entry.Target, targetExpression);
 
                     for (var i = 0; i < entry.Parameters.Count; i++) {
-                        map.Add(entry.Parameters[i], arguments != null ? arguments[i] : parameters[i]);
+                        var arg = arguments?[i];
+                        map.Add(entry.Parameters[i], arg != null && 
+                                                     arg.NodeType != ExpressionType.Call &&
+                                                     arg.NodeType != ExpressionType.Invoke
+                                                        ? arg : parameters[i]);
                     }
 
                     var replacer = new CacheReplacer(map);
