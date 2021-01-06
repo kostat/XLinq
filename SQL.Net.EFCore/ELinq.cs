@@ -25,7 +25,7 @@ namespace Streamx.Linq.SQL.EFCore {
 #else
             null;
 #endif
-        private static volatile int licenseChecked;
+        /*private static volatile int licenseChecked;
         private static volatile Exception licenseException;
         private static volatile String licenseKey = null;
 
@@ -68,7 +68,7 @@ namespace Streamx.Linq.SQL.EFCore {
             var e = licenseException;
             if (e != null)
                 throw e;
-        }
+        }*/
         
         /// <summary>
         /// Access ELinq global configuration 
