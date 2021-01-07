@@ -333,7 +333,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                     return () => new PackedInitializers(Collections.emptyList<Expression>(), Collections.emptyList<Func<ISequence<char>>>(),
                         Collections.emptyList<ISequence<char>>(), this);
 
-                var type = value.GetType();
+                var type     = e.Type;
                 var typeCode = Type.GetTypeCode(type);
                 var canConst = typeCode >= TypeCode.Char;
 

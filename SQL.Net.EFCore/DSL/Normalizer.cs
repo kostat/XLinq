@@ -14,7 +14,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 var result = node.Method.Invoke(node.Object != null ? Expression.Lambda(node.Object).Compile().DynamicInvoke() : null,
                     EvaluateArgumentsForLocalFunction(node.Arguments));
                 // TODO: re-parse
-                return Expression.Constant(result, node.Type);
+                return Expression.Constant(result, Type.GetTypeCode(node.Type) >= TypeCode.Boolean ? typeof(object) : node.Type);
             }
 
             if (ELinq.GetSubstitition(node.Method, out var subst)) {
