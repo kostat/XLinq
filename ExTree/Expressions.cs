@@ -69,6 +69,21 @@ namespace Streamx.Linq.ExTree {
             return Expression.MakeBinary(expressionType, left, TypeConverter.Convert(right, left.Type));
         }
 
+        public static BinaryExpression CreateNumericComparison(ExpressionType expressionType, Expression left, Expression right) {
+            if (left.Type != right.Type) {
+                var leftT = Type.GetTypeCode(left.Type);
+                var rightT = Type.GetTypeCode(right.Type);
+
+                if (leftT < rightT) {
+                    left = Expression.Convert(left, right.Type);
+                }
+                else {
+                    right = Expression.Convert(right, left.Type);
+                }
+            }
+            return Expression.MakeBinary(expressionType, left, right);
+        }
+
         public static BinaryExpression Add(Expression first,
             Expression second) {
             return CreateNumeric(ExpressionType.Add, first, second);

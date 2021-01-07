@@ -99,6 +99,9 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
 
         public IdentifierPath getColumnNameFromProperty(MethodInfo methodBase, Type target) {
             if (methodBase.IsSpecialName) {
+                
+                if (methodBase.IsStatic)
+                    throw TranslationError.UNMAPPED_FIELD.getError(methodBase.DeclaringType, methodBase.Name);
 
                 if (isEntityLike(methodBase.ReturnType)) {
                     var assoc = FindAssociation(target, methodBase, true);

@@ -148,8 +148,48 @@ namespace Streamx.Linq.SQL.EFCore {
             where TEntity : class
             where TEntity1 : class
             where TEntity2 : class
-            where TEntity3 : class =>
+            where TEntity3 : class 
+            where TEntity4 : class =>
             Query0(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DbSet<TEntity> source,
+                Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, IQueryResult<TEntity>> query)
+                where TEntity : class
+                where TEntity1 : class
+                where TEntity2 : class
+                where TEntity3 : class 
+                where TEntity4 : class
+                where TEntity5 : class =>
+                Query0(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6>(this DbSet<TEntity> source,
+                Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6, IQueryResult<TEntity>> query)
+                where TEntity : class
+                where TEntity1 : class
+                where TEntity2 : class
+                where TEntity3 : class 
+                where TEntity4 : class
+                where TEntity5 : class
+                where TEntity6 : class =>
+                Query0(source, query);
 
         private static IQueryable<TEntity> Query0<TEntity, TDelegate>(DbSet<TEntity> source, TDelegate query)
             where TEntity : class
