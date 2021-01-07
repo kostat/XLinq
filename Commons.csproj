@@ -4,7 +4,7 @@
 	    <Obfuscar Condition="'$(Obfuscar)' == ''">$(SolutionDir).tools/obfuscar.console</Obfuscar>
     </PropertyGroup>
 
-    <Target Name="PostBuildScript" AfterTargets="Build" Condition="'$(Configuration)' == 'Release' and $(TargetFramework) != ''">
+    <Target Name="PostBuildScript" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
         <CallTarget Targets="Obfuscar" />
     </Target>
 
@@ -14,10 +14,6 @@
     </Target>
 
     <ItemGroup>
-        <PackageReference Include="Obfuscar" Version="2.2.25" Condition="'$(TargetFramework)'=='net471'">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
         <None Update="obfuscar.xml" Visible="false">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
