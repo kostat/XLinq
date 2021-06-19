@@ -25,11 +25,13 @@ namespace Streamx.Linq.ExTree {
         }
 
         private readonly struct CacheEntry {
-            public readonly Expression                 Body;
+            public readonly Expression Body;
+            public readonly Expression Target;
             public readonly IList<ParameterExpression> Parameters;
 
-            public CacheEntry(Expression body, IList<ParameterExpression> parameters) {
-                Body       = body;
+            public CacheEntry(Expression body, Expression target, IList<ParameterExpression> parameters) {
+                Body = body;
+                Target = target;
                 Parameters = parameters;
             }
         }
@@ -121,6 +123,12 @@ namespace Streamx.Linq.ExTree {
 
             {
                 var map = new Dictionary<Expression, Expression>();
+                var target = targetExpression;
+                if (target != null) {
+                    target = Expression.Constant(targetExpression.Type.IsValueType ? Activator.CreateInstance(targetExpression.Type) : null,
+                        targetExpression.Type);
+                    map.Add(targetExpression, target);
+                }
 
                 if (arguments != null) {
                     for (var i = 0; i < arguments.Count; i++) {
@@ -133,7 +141,7 @@ namespace Streamx.Linq.ExTree {
                 lock (CACHE) {
                     if (!CACHE.TryGetValue(cacheKey, out cached)) {
 
-                        cached = new CacheEntry(body, parameters);
+                        cached = new CacheEntry(body, target, parameters);
                         CACHE.Add(cacheKey, cached);
                     }
                 }
@@ -143,8 +151,10 @@ namespace Streamx.Linq.ExTree {
 
             Expression bind(CacheEntry entry) {
                 Expression cachedBody = entry.Body;
-                if (parameters.Any()) {
+                if (entry.Target != null || parameters.Any()) {
                     var map = new Dictionary<Expression, Expression>();
+                    if (entry.Target != null)
+                        map.Add(entry.Target, targetExpression);
 
                     for (var i = 0; i < entry.Parameters.Count; i++) {
                         var arg = arguments?[i];
