@@ -729,13 +729,15 @@ namespace Streamx.Linq.ExTree {
                 case ILOpCode.Calli:
                 case ILOpCode.Callvirt:
                     var instance = methodBase.IsStatic ? null : _exprStack.Pop();
+                    if (instance != null)
+                        this.NotCacheable = true;
 
                     if (instance != null && typeof(Delegate).IsAssignableFrom(instance) && methodBase.Name.EndsWith("Invoke", StringComparison.Ordinal)) {
 
                         Delegate compiled;
                         try {
                             compiled = Expression.Lambda(instance).Compile();
-                            this.NotCacheable = true;
+                            
                         }
                         catch (InvalidOperationException ioe) {
                             // cannot compile
