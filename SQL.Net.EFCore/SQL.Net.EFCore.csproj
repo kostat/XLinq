@@ -5,7 +5,7 @@
     <AssemblyName>Streamx.Linq.SQL.EFCore</AssemblyName>
     <LangVersion>7.3</LangVersion>
     <PackageTags>ELINQ;XLINQ;LINQ;SQL;Entity;Framework;Core;entity-framework-core;EF;Data;O/RM;EntityFramework;EntityFrameworkCore;EFCore</PackageTags>
-    <VersionPrefix>5.0.1</VersionPrefix>
+    <VersionPrefix>5.0.2</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
   </PropertyGroup>
 
