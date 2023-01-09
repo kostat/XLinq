@@ -59,7 +59,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             var entityType = FindEntityType(left.Type);
             var pkey = entityType?.FindPrimaryKey();
             if (pkey != null) {
-                var keys = pkey.Properties.Select(p => Quoter(p.GetColumnName()).AsSequence()).ToList();
+                var keys = pkey.Properties.Select(p => Quoter(GET_COLUMN_NAME(p)).AsSequence()).ToList();
                 return new Association(keys, keys, false);
             }
 
@@ -84,8 +84,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             if (navigation == null)
                 return null;
             var foreignKey = navigation.ForeignKey;
-            var foreignKeyProperties = foreignKey.Properties.Select(p => Quoter(p.GetColumnName()).AsSequence()).ToList();
-            var principalKeyProperties = foreignKey.PrincipalKey.Properties.Select(p => Quoter(p.GetColumnName()).AsSequence()).ToList();
+            var foreignKeyProperties = foreignKey.Properties.Select(p => Quoter(GET_COLUMN_NAME(p)).AsSequence()).ToList();
+            var principalKeyProperties = foreignKey.PrincipalKey.Properties.Select(p => Quoter(GET_COLUMN_NAME(p)).AsSequence()).ToList();
 
             return new Association(foreignKeyProperties, principalKeyProperties, leftOwner);
         }
@@ -96,6 +96,10 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             return instance;
             // throw new System.NotImplementedException();
         }
+
+        private delegate string GetColumnName(IProperty property);
+        private static readonly GetColumnName GET_COLUMN_NAME = typeof(RelationalPropertyExtensions).GetMethod(nameof(RelationalPropertyExtensions.GetColumnName), 
+            BindingFlags.Public | BindingFlags.Static, new []{ typeof(IProperty)})?.CreateDelegate<GetColumnName>();
 
         public IdentifierPath getColumnNameFromProperty(MethodInfo methodBase, Type target) {
             if (methodBase.IsSpecialName) {
@@ -112,7 +116,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
                 var prop = FindProperty(target, methodBase, (e, mi) => e.FindProperty(mi));
                 if (prop == null && !IsEntity(target) && !target.IsDefined(typeof(TupleAttribute)))
                     throw TranslationError.UNMAPPED_FIELD.getError(target, methodBase.Name);
-                var columnName = prop == null ? RemoveSpecialPrefix(methodBase.Name) : prop.GetColumnName();
+                var columnName = prop == null ? RemoveSpecialPrefix(methodBase.Name) : GET_COLUMN_NAME(prop);
                 return new IdentifierPath.Resolved(Quoter(columnName).AsSequence(), methodBase.DeclaringType, methodBase.Name, null);
             }
 
