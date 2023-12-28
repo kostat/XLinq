@@ -169,7 +169,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
         private string GetSchema(IReadOnlyEntityType entityType)
         {
             var schema = entityType.GetSchema() ?? entityType.GetViewSchema();    
-            return Quoter(schema);
+            return String.IsNullOrEmpty(schema) ? null : Quoter(schema);
         }
     }
 }
