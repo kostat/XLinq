@@ -4,9 +4,9 @@
 	    <Obfuscar Condition="'$(Obfuscar)' == ''">$(SolutionDir).tools/obfuscar.console</Obfuscar>
     </PropertyGroup>
 
-    <Target Name="PostBuildScript" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <!--Target Name="PostBuildScript" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
         <CallTarget Targets="Obfuscar" />
-    </Target>
+    </Target-->
 
     <Target Name="Obfuscar">
         <Exec Command="$(Obfuscar) obfuscar.xml" WorkingDirectory="$(OutputPath)" />

@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Streamx.Linq.SQL.EFCore</AssemblyName>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
     <PackageTags>ELINQ;XLINQ;LINQ;SQL;Entity;Framework;Core;entity-framework-core;EF;Data;O/RM;EntityFramework;EntityFrameworkCore;EFCore</PackageTags>
-    <VersionPrefix>6.0.1</VersionPrefix>
+    <VersionPrefix>8.0.0</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
   </PropertyGroup>
 

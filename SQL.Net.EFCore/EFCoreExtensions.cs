@@ -84,9 +84,21 @@ namespace Streamx.Linq.SQL.EFCore {
         ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
         ///     </para>
         /// </summary>
-        public static IQueryable<TEntity> Query<TEntity>(this DbSet<TEntity> source, Func<IQueryResult<TEntity>> query)
-            where TEntity : class =>
+        public static IQueryable<TResultEntity> Query<TResultEntity>(this DbSet<TResultEntity> source, Func<IQueryResult<TResultEntity>> query)
+            where TResultEntity : class =>
             Query0(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TResultEntity> Query<TResultEntity>(this DatabaseFacade source, Func<IQueryResult<TResultEntity>> query) =>
+            Query1<Func<IQueryResult<TResultEntity>>, TResultEntity>(source, query);
 
         /// <summary>
         ///     <para>
@@ -97,10 +109,23 @@ namespace Streamx.Linq.SQL.EFCore {
         ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
         ///     </para>
         /// </summary>
-        public static IQueryable<TEntity> Query<TEntity, TEntity1>(this DbSet<TEntity> source, Func<TEntity1, IQueryResult<TEntity>> query)
-            where TEntity : class
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1>(this DbSet<TResultEntity> source, Func<TEntity1, IQueryResult<TResultEntity>> query)
+            where TResultEntity : class
             where TEntity1 : class =>
             Query0(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1>(this DatabaseFacade source, Func<TEntity1, IQueryResult<TResultEntity>> query)
+            where TEntity1 : class =>
+            Query1<Func<TEntity1, IQueryResult<TResultEntity>>, TResultEntity>(source, query);
 
         /// <summary>
         ///     <para>
@@ -111,11 +136,25 @@ namespace Streamx.Linq.SQL.EFCore {
         ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
         ///     </para>
         /// </summary>
-        public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2>(this DbSet<TEntity> source, Func<TEntity1, TEntity2, IQueryResult<TEntity>> query)
-            where TEntity : class
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2>(this DbSet<TResultEntity> source, Func<TEntity1, TEntity2, IQueryResult<TResultEntity>> query)
+            where TResultEntity : class
             where TEntity1 : class
             where TEntity2 : class =>
             Query0(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2>(this DatabaseFacade source, Func<TEntity1, TEntity2, IQueryResult<TResultEntity>> query)
+            where TEntity1 : class
+            where TEntity2 : class =>
+            Query1<Func<TEntity1, TEntity2, IQueryResult<TResultEntity>>, TResultEntity>(source, query);
 
         /// <summary>
         ///     <para>
@@ -126,13 +165,29 @@ namespace Streamx.Linq.SQL.EFCore {
         ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
         ///     </para>
         /// </summary>
-        public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2, TEntity3>(this DbSet<TEntity> source,
-            Func<TEntity1, TEntity2, TEntity3, IQueryResult<TEntity>> query)
-            where TEntity : class
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2, TEntity3>(this DbSet<TResultEntity> source,
+            Func<TEntity1, TEntity2, TEntity3, IQueryResult<TResultEntity>> query)
+            where TResultEntity : class
             where TEntity1 : class
             where TEntity2 : class
             where TEntity3 : class =>
             Query0(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2, TEntity3>(this DatabaseFacade source,
+            Func<TEntity1, TEntity2, TEntity3, IQueryResult<TResultEntity>> query)
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class =>
+            Query1<Func<TEntity1, TEntity2, TEntity3, IQueryResult<TResultEntity>>, TResultEntity>(source, query);
 
         /// <summary>
         ///     <para>
@@ -143,9 +198,9 @@ namespace Streamx.Linq.SQL.EFCore {
         ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
         ///     </para>
         /// </summary>
-        public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DbSet<TEntity> source,
-            Func<TEntity1, TEntity2, TEntity3, TEntity4, IQueryResult<TEntity>> query)
-            where TEntity : class
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DbSet<TResultEntity> source,
+            Func<TEntity1, TEntity2, TEntity3, TEntity4, IQueryResult<TResultEntity>> query)
+            where TResultEntity : class
             where TEntity1 : class
             where TEntity2 : class
             where TEntity3 : class 
@@ -161,9 +216,26 @@ namespace Streamx.Linq.SQL.EFCore {
         ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
         ///     </para>
         /// </summary>
-        public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DbSet<TEntity> source,
-                Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, IQueryResult<TEntity>> query)
-                where TEntity : class
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2, TEntity3, TEntity4>(this DatabaseFacade source,
+            Func<TEntity1, TEntity2, TEntity3, TEntity4, IQueryResult<TResultEntity>> query)
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class 
+            where TEntity4 : class =>
+            Query1<Func<TEntity1, TEntity2, TEntity3, TEntity4, IQueryResult<TResultEntity>>, TResultEntity>(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DbSet<TResultEntity> source,
+                Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, IQueryResult<TResultEntity>> query)
+                where TResultEntity : class
                 where TEntity1 : class
                 where TEntity2 : class
                 where TEntity3 : class 
@@ -180,9 +252,27 @@ namespace Streamx.Linq.SQL.EFCore {
         ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
         ///     </para>
         /// </summary>
-        public static IQueryable<TEntity> Query<TEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6>(this DbSet<TEntity> source,
-                Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6, IQueryResult<TEntity>> query)
-                where TEntity : class
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(this DatabaseFacade source,
+            Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, IQueryResult<TResultEntity>> query)
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class 
+            where TEntity4 : class
+            where TEntity5 : class =>
+            Query1<Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, IQueryResult<TResultEntity>>, TResultEntity>(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6>(this DbSet<TResultEntity> source,
+                Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6, IQueryResult<TResultEntity>> query)
+                where TResultEntity : class
                 where TEntity1 : class
                 where TEntity2 : class
                 where TEntity3 : class 
@@ -190,6 +280,25 @@ namespace Streamx.Linq.SQL.EFCore {
                 where TEntity5 : class
                 where TEntity6 : class =>
                 Query0(source, query);
+        
+        /// <summary>
+        ///     <para>
+        ///         Creates a LINQ query based on XLINQ query.
+        ///     </para>
+        ///     <para>
+        ///         If the database provider supports composing on the supplied SQL, you can compose on top of the XLINQ query using
+        ///         LINQ operators - <code>context.Blogs.Query(...).OrderBy(b =&gt; b.Name)</code>.
+        ///     </para>
+        /// </summary>
+        public static IQueryable<TResultEntity> Query<TResultEntity, TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6>(this DatabaseFacade source,
+            Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6, IQueryResult<TResultEntity>> query)
+            where TEntity1 : class
+            where TEntity2 : class
+            where TEntity3 : class 
+            where TEntity4 : class
+            where TEntity5 : class
+            where TEntity6 : class =>
+            Query1<Func<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6, IQueryResult<TResultEntity>>, TResultEntity>(source, query);
 
         private static IQueryable<TEntity> Query0<TEntity, TDelegate>(DbSet<TEntity> source, TDelegate query)
             where TEntity : class
@@ -338,6 +447,12 @@ namespace Streamx.Linq.SQL.EFCore {
             where TDelegate : MulticastDelegate {
             var qsql = GetQuerySQL(db, query, out var @params);
             return db.ExecuteSqlRawAsync(qsql, @params);
+        }
+        
+        private static IQueryable<TResult> Query1<TDelegate, TResult>(DatabaseFacade db, TDelegate query)
+            where TDelegate : MulticastDelegate {
+            var qsql = GetQuerySQL(db, query, out var @params);
+            return db.SqlQueryRaw<TResult>(qsql, @params);
         }
 
         /// <summary>
