@@ -97,8 +97,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             // throw new System.NotImplementedException();
         }
 
-        private string GET_COLUMN_NAME(IProperty property) => 
-            property.GetColumnName(StoreObjectIdentifier.Table(GetTableName(property.DeclaringEntityType), GetSchema(property.DeclaringEntityType)));
+        private string GET_COLUMN_NAME(IProperty property) => property.GetColumnName();
+            // property.GetColumnName(StoreObjectIdentifier.Table(GetTableName(property.DeclaringEntityType), GetSchema(property.DeclaringEntityType)));
 
         public IdentifierPath getColumnNameFromProperty(MethodInfo methodBase, Type target) {
             if (methodBase.IsSpecialName) {
