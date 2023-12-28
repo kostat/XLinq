@@ -97,9 +97,8 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             // throw new System.NotImplementedException();
         }
 
-        private delegate string GetColumnName(IProperty property);
-        private static readonly GetColumnName GET_COLUMN_NAME = typeof(RelationalPropertyExtensions).GetMethod(nameof(RelationalPropertyExtensions.GetColumnName), 
-            BindingFlags.Public | BindingFlags.Static, new []{ typeof(IProperty)})?.CreateDelegate<GetColumnName>();
+        private string GET_COLUMN_NAME(IProperty property) => 
+            property.GetColumnName(StoreObjectIdentifier.Table(GetTableName(property.DeclaringEntityType), GetSchema(property.DeclaringEntityType)));
 
         public IdentifierPath getColumnNameFromProperty(MethodInfo methodBase, Type target) {
             if (methodBase.IsSpecialName) {
@@ -153,20 +152,24 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             return propInfo;
         }
 
-        public String getTableName(Type entity) {
+        public String getTableFullName(Type entity) {
             var entityType = model.FindRuntimeEntityType(entity);
             // TODO: throw if null
-            var schema = entityType.GetSchema()
-#if EFCORE5
-                         ?? entityType.GetViewSchema()    
-#endif
-                    ;
-            var tableName = Quoter(entityType.GetTableName()
-#if EFCORE5
-                                   ?? entityType.GetViewName()
-#endif
-                    );
-            return schema != null ? Quoter(schema) + DOT + tableName : tableName;
+            var schema = GetSchema(entityType);
+            var tableName = GetTableName(entityType);
+            return schema != null ? schema + DOT + tableName : tableName;
+        }
+
+        private string GetTableName(IReadOnlyEntityType entityType)
+        {
+            var tableName = entityType.GetTableName() ?? entityType.GetViewName();
+            return Quoter(tableName);
+        }
+
+        private string GetSchema(IReadOnlyEntityType entityType)
+        {
+            var schema = entityType.GetSchema() ?? entityType.GetViewSchema();    
+            return Quoter(schema);
         }
     }
 }

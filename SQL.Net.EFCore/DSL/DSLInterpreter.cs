@@ -1278,7 +1278,7 @@ namespace Streamx.Linq.SQL.EFCore.DSL {
             if (joinTable != null)
                 return getECTableName(joinTable);*/
 
-            return getTableName(resultType).AsSequence();
+            return getTableFullName(resultType).AsSequence();
         }
 
         private ISequence<char> handleFromClause(ISequence<char> seq,
